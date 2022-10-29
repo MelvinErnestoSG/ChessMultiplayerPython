@@ -1,2 +1,0 @@
-# ChessMultiplayerPython
-Practicing Python programming.
