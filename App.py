@@ -39,10 +39,12 @@ Thread(target=speak("welcome!")).start()
 # sound when are moved pieces.
 def move_sound(): 
     playsound('move.wav')
+    return True
 
 # sound when is captured pieces.
 def capture_sound(): 
     playsound('capture.wav')
+    return True
 
 #self=Frame, parent=root
 class App(tk.Frame):
