@@ -21,7 +21,7 @@ from tkinter import messagebox
 # import dimensions and castling.
 from Const import DIMENSION,CASTLING_WHITE,CASTLING_BLACK,SIZE,LEFT,UP,LIGHT,DARK,WHITE
 
-# pip install playsound
+# pip install playsound help with importing playsound.
 from playsound import playsound 
 #--------------------------------------#
 # speak function.
