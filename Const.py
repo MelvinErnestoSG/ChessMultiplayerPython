@@ -8,12 +8,15 @@ CASTLING_WHITE=1
 CASTLING_BLACK=8
 
 # Size screen
-SIZE=97
+SIZE=100
 
 # Centling screen
-LEFT=450
-UP=10
+LEFT=400
+UP=5
 
 # Colors square
 LIGHT='#eeeed2'
 DARK='#769656'
+
+# Color Highlight background
+WHITE='#fff'
