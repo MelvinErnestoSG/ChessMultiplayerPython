@@ -23,7 +23,7 @@ from Const import DIMENSION,CASTLING_WHITE,CASTLING_BLACK,SIZE,LEFT,UP,LIGHT,DAR
 
 # pip install playsound
 from playsound import playsound 
-
+#--------------------------------------#
 # speak function.
 engine=pyttsx3.init('sapi5')
 voices=engine.getProperty('voices')
@@ -35,7 +35,7 @@ def speak(audio):
     engine.runAndWait()
 
 Thread(target=speak("welcome!")).start()
-
+#--------------------------------------#
 # sound when are moved pieces.
 def move_sound(): 
     playsound('move.wav')
@@ -45,7 +45,7 @@ def move_sound():
 def capture_sound(): 
     playsound('capture.wav')
     return True
-
+#--------------------------------------#
 #self=Frame, parent=root
 class App(tk.Frame):
     def __init__(self, parent, height, width): 
