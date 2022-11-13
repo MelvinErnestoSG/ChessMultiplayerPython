@@ -106,7 +106,8 @@ class App(tk.Frame):
         self.black_rook2_moved=False
 
         self.castled=False
-
+        
+    # call other functions.
     def __call__(self):
         self.set_squares()
         self.get_alphacol()
