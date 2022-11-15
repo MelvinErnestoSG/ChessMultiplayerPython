@@ -6,6 +6,7 @@ import string as st
 # help with importing images.
 import os
 
+# help with importing speak audio.
 # pip install pyttsx3.
 import pyttsx3
 
@@ -109,7 +110,7 @@ class App(tk.Frame):
         self.black_rook2_moved=False
 
         self.castled=False
-       
+
     # call other functions.
     def __call__(self):
         self.set_squares()
@@ -235,7 +236,6 @@ class App(tk.Frame):
                         
                         self.squares[prev_sq1].config(image=prev_sq1_button_piece)
                         self.squares[prev_sq1].image=prev_sq1_button_piece
-                        self.buttons_pressed=0
                         return
                     else:
                         # runs if king is not in check, 
