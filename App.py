@@ -253,14 +253,12 @@ class App(tk.Frame):
                             self.black_rook1_moved==True
                         if prev_sq1_button_piece=="pyimage14" and prev_sq1=="h8":
                             self.black_rook2_moved=True
-                            self.buttons_pressed=0
                         self.turns+=1  
                         # checks for possible pawn promotion.                 
                         if (button["image"]=="pyimage5" and prev_sq2.count("8")==1) or (button["image"]=="pyimage12" and prev_sq2.count("1")==1):
                             self.promotion_menu(self.piece_color)
                         self.castled==False
         else:
-            self.buttons_pressed=0
             return
 
     # creates menu to choose what piece to change the pawn to.
@@ -440,7 +438,7 @@ class App(tk.Frame):
                         if square_on_path!="pyimage2":
                             return False
 
-                elif x1>x2:# NW direction.
+                if x1>x2:# NW direction.
                     for x in range(x1-1,x2,-1):
                         y1+=1
                         square_on_path=self.squares[self.ranks[x]+str(y1)].cget("image")
