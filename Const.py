@@ -15,8 +15,8 @@ LEFT=400
 UP=5
 
 # Colors square
-LIGHT='#eeeed2'
-DARK='#769656'
+LIGHT="burlywood1"
+DARK="tan4"
 
 # Color Highlight background
 WHITE='#fff'

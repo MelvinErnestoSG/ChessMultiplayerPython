@@ -40,12 +40,17 @@ Thread(target=speak("welcome!")).start()
 # sound when are moved pieces.
 def move_sound(): 
     playsound('move.wav')
-    return False
-
+    
 # sound when is captured pieces.
 def capture_sound(): 
     playsound('capture.wav')
-    return False
+
+def play_sound(captured=False):
+    if captured:
+        move_sound()
+    else:
+        capture_sound()
+
 #--------------------------------------#
 #self=Frame, parent=root
 class App(tk.Frame):
@@ -179,13 +184,14 @@ class App(tk.Frame):
         #checks color of first piece
         if button["image"] in self.white_pieces and self.buttons_pressed==False: 
             self.piece_color="white"
-            
+            play_sound(self)
+        
         elif button["image"] in self.black_pieces and self.buttons_pressed==False:
             self.piece_color="black" 
-            
+            play_sound(self)
         
         # prevents people from moving their pieces when it's not heir turn.
-        if (self.piece_color=="white" and self.turns%2==0) or (self.piece_color=="black" and self.turns%2==1) or self.buttons_pressed==2:
+        if (self.piece_color=="white" and self.turns%2==0) or (self.piece_color=="black" and self.turns%2==1) or self.buttons_pressed==1:
             # stores square and button of first square selected.
             if self.buttons_pressed==False: 
                 # retrieves position of piece
@@ -231,6 +237,7 @@ class App(tk.Frame):
                         
                         self.squares[prev_sq1].config(image=prev_sq1_button_piece)
                         self.squares[prev_sq1].image=prev_sq1_button_piece
+                        self.buttons_pressed=0
                         return
                     else:
                         # runs if king is not in check, 
@@ -248,11 +255,12 @@ class App(tk.Frame):
                             self.black_rook1_moved==True
                         if prev_sq1_button_piece=="pyimage14" and prev_sq1=="h8":
                             self.black_rook2_moved=True
+                            self.buttons_pressed=0
                         self.turns+=1  
                         # checks for possible pawn promotion.                 
                         if (button["image"]=="pyimage5" and prev_sq2.count("8")==1) or (button["image"]=="pyimage12" and prev_sq2.count("1")==1):
                             self.promotion_menu(self.piece_color)
-                        self.castled=False
+                        self.castled==False
         else:
             self.buttons_pressed=0
             return
@@ -454,7 +462,7 @@ class App(tk.Frame):
                         y1-=1
                         square_on_path=self.squares[self.ranks[x]+str(y1)].cget("image")
                         if square_on_path!="pyimage2":
-                            return False                  
+                            return False   
         return True
 
     # checks whether the piece can move to square 2 with respect to their movement capabilities.
@@ -474,7 +482,7 @@ class App(tk.Frame):
                 return True
 
         # knight movement.
-        if (self.sq1_button["image"]==wn or self.sq1_button["image"]==bn):
+        if self.sq1_button["image"]==wn or self.sq1_button["image"]==bn:
             # allows tall L moves.
             if (abs(int(self.sq1[1])-int(self.sq2[1]))==2) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1):
                 return True
@@ -484,7 +492,7 @@ class App(tk.Frame):
                 return True
 
         # king movement.
-        if (self.sq1_button["image"]==wk or self.sq1_button["image"]==bk):
+        if self.sq1_button["image"]==wk or self.sq1_button["image"]==bk:
             # allows 1 square moves.
             if (abs(int(self.sq1[1])-int(self.sq2[1]))<2) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])))<2:
                 return True
@@ -494,7 +502,7 @@ class App(tk.Frame):
             return True
 
         # white pawn movement.
-        if (self.sq1_button["image"]==wp):
+        if self.sq1_button["image"]==wp:
             # allows for 2 space jump from starting position.
             if "2" in self.sq1: 
                 # allows 2 sq movement.
@@ -511,11 +519,10 @@ class App(tk.Frame):
 
             # allows the capturing of diagonal pieces.       
             if int(self.sq1[1])+1==int(self.sq2[1]) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])))==1 and self.sq2_button["image"]!="pyimage2": 
-                capture_sound()
                 return True
 
         # black pawn movement.
-        if (self.sq1_button["image"]==bp): 
+        if self.sq1_button["image"]==bp: 
             # allows for 2 space jump from starting position.
             if "7" in self.sq1: 
                 # only allows it to move straight 1 or 2 sql.
@@ -527,7 +534,7 @@ class App(tk.Frame):
 
             # allows the capturing of diagonal pieces if there is an opponent piece there.
             if int(self.sq1[1])==int(self.sq2[1])+1 and abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1 and self.sq2_button["image"]!="pyimage2":
-                capture_sound()
+
                 return True
 
         # queen movement.
@@ -541,9 +548,9 @@ class App(tk.Frame):
                 return True
 
         # rook movement.
-        if (self.sq1_button["image"]==wr or self.sq1_button["image"]==br): 
+        if self.sq1_button["image"]==wr or self.sq1_button["image"]==br: 
             # only allows movement within same rank or file.
-            if (int(self.sq1[1])==int(self.sq2[1]) or self.sq1[0]==self.sq2[0]) and self.clear_path("rook"):
+            if int(self.sq1[1])==int(self.sq2[1]) or self.sq1[0]==self.sq2[0] and self.clear_path("rook"):
                 return True
         return False
 
@@ -563,7 +570,7 @@ class App(tk.Frame):
                     self.squares["a1"].config(image="pyimage2")
                     self.squares["a1"].image="pyimage2"
                     self.squares["d1"].config(image="pyimage7")
-                    self.squares["d1"].image="pyimage7"
+                    self.squares["d1"].image=("pyimage7")
                     self.castled=True
                     return True
 
@@ -577,7 +584,7 @@ class App(tk.Frame):
                     self.squares["h1"].config(image="pyimage2")
                     self.squares["h1"].image="pyimage2"
                     self.squares["f1"].config(image="pyimage7")
-                    self.squares["f1"].image="pyimage7"
+                    self.squares["f1"].image=("pyimage7")
                     self.castled=True
                     return True
 
@@ -592,7 +599,7 @@ class App(tk.Frame):
                     self.squares["a8"].config(image="pyimage2")
                     self.squares["a8"].image="pyimage2"
                     self.squares["d8"].config(image="pyimage14")
-                    self.squares["d8"].image="pyimage14"
+                    self.squares["d8"].image=("pyimage14")
                     self.castled=True
                     return True
 
@@ -606,7 +613,7 @@ class App(tk.Frame):
                     self.squares["h8"].config(image="pyimage2")
                     self.squares["h8"].image="pyimage2"
                     self.squares["f8"].config(image="pyimage14")
-                    self.squares["f8"].image="pyimage14"
+                    self.squares["f8"].image=("pyimage14")
                     self.castled=True
                     return True
         else:
@@ -653,7 +660,7 @@ class App(tk.Frame):
                     if self.allowed_piece_move():
                         speak("invalid move")
                         return True
-        move_sound()
+
         return_previous_values()
         return False
 
@@ -675,14 +682,14 @@ class App(tk.Frame):
                     self.square_color=DARK
                 else:
                     self.square_color=LIGHT
-                    
+
                 buttons = tk.Button(
                                         self,  
                                         bg=self.square_color, 
                                         bd=False, 
                                         width=94,
                                         height=94,
-                                        activebackground=self.square_color
+                                        activebackground=self.square_color,
                                     )
                 buttons.grid(row=8-x, column=y)
                 position=self.ranks[y]+str(x+1)
@@ -694,6 +701,7 @@ class App(tk.Frame):
                                             key=self.squares[position]: 
                                             self.select_piece(key)
                                         )
+
     # opens and stores images of pieces and prepares
     # the pieces for the game for both sides.
     def import_pieces(self):
