@@ -29,28 +29,26 @@ from playsound import playsound
 engine=pyttsx3.init('sapi5')
 voices=engine.getProperty('voices')
 engine.setProperty('voice', voices[0].id)
-
 # speak when the game starts.
 def speak(audio):
     engine.say(audio)
     engine.runAndWait()
-
 Thread(target=speak("welcome!")).start()
 #--------------------------------------#
 # sound when are moved pieces.
 def move_sound(): 
     playsound('move.wav')
-    
-# sound when is captured pieces.
+#--------------------------------------#
+# sound when is moved pieces.
 def capture_sound(): 
     playsound('capture.wav')
-
+#--------------------------------------#
+# call sound when is captured pieces.
 def play_sound(captured=False):
     if captured:
         move_sound()
     else:
         capture_sound()
-
 #--------------------------------------#
 #self=Frame, parent=root
 class App(tk.Frame):
@@ -111,7 +109,7 @@ class App(tk.Frame):
         self.black_rook2_moved=False
 
         self.castled=False
-        
+       
     # call other functions.
     def __call__(self):
         self.set_squares()
@@ -534,7 +532,6 @@ class App(tk.Frame):
 
             # allows the capturing of diagonal pieces if there is an opponent piece there.
             if int(self.sq1[1])==int(self.sq2[1])+1 and abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1 and self.sq2_button["image"]!="pyimage2":
-
                 return True
 
         # queen movement.
@@ -548,9 +545,9 @@ class App(tk.Frame):
                 return True
 
         # rook movement.
-        if self.sq1_button["image"]==wr or self.sq1_button["image"]==br: 
+        if (self.sq1_button["image"]==wr or self.sq1_button["image"]==br) and self.clear_path("rook"): 
             # only allows movement within same rank or file.
-            if int(self.sq1[1])==int(self.sq2[1]) or self.sq1[0]==self.sq2[0] and self.clear_path("rook"):
+            if int(self.sq1[1])==int(self.sq2[1]) or self.sq1[0]==self.sq2[0]:
                 return True
         return False
 
