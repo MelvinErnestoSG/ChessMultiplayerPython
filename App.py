@@ -22,8 +22,8 @@ from tkinter import messagebox
 # import dimensions and castling.
 from Const import DIMENSION,CASTLING_WHITE,CASTLING_BLACK,SIZE,LEFT,UP,LIGHT,DARK,WHITE
 
-# help with importing playsound.
-# pip install playsound 
+# help with importing play sound.
+# pip install play sound 
 from playsound import playsound 
 #--------------------------------------#
 # speak function.
@@ -121,13 +121,13 @@ class App(tk.Frame):
     # call other functions.
     def __call__(self):
         self.set_squares()
-        self.get_alphacol()
+        self.set_alpha_color()
         self.import_pieces()
         self.set_pieces()
         self.mainloop()
 
     # letters and numbers above the buttons.
-    def get_alphacol(self):
+    def set_alpha_color(self):
         font_size=7
         letters=[
                     [' h ',' g ',' f ',' e ',' d ',' c ',' b ',' a '],
@@ -299,7 +299,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage6")
                                     )
-            promo_queen.grid(row=0, column=0, padx=1, pady=1)
+            promo_queen.grid(row=0, column=0, padding_x=1, padding_y=1)
 
             promo_rook = tk.Button  (
                                         promo, 
@@ -311,7 +311,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage7")
                                     )
-            promo_rook.grid(row=0, column=1, padx=1, pady=1)
+            promo_rook.grid(row=0, column=1, padding_x=1, padding_y=1)
 
             promo_bishop = tk.Button(
                                         promo, 
@@ -323,7 +323,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage1")
                                     )
-            promo_bishop.grid(row=0, column=2, padx=1, pady=1)
+            promo_bishop.grid(row=0, column=2, padding_x=1, padding_y=1)
 
             promo_knight = tk.Button(
                                         promo, 
@@ -335,7 +335,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage4")
                                     ) 
-            promo_knight.grid(row=0, column=3, padx=1, pady=1)
+            promo_knight.grid(row=0, column=3, padding_x=1, padding_y=1)
 
         elif color == "black":
             # triggers return_piece function when selected.
@@ -349,7 +349,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage13")
                                     )
-            promo_queen.grid(row=0, column=0, padx=1, pady=1)
+            promo_queen.grid(row=0, column=0, padding_x=1, padding_y=1)
 
             promo_rook = tk.Button  (
                                         promo, 
@@ -361,7 +361,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage14")
                                     )
-            promo_rook.grid(row=0, column=1, padx=1, pady=1)
+            promo_rook.grid(row=0, column=1, padding_x=1, padding_y=1)
 
             promo_bishop = tk.Button(
                                         promo, 
@@ -373,7 +373,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage8")
                                     )
-            promo_bishop.grid(row=0, column=2, padx=1, pady=1)
+            promo_bishop.grid(row=0, column=2, padding_x=1, padding_y=1)
 
             promo_knight = tk.Button(
                                         promo, 
@@ -385,7 +385,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage11")
                                     )
-            promo_knight.grid(row=0, column=3, padx=1, pady=1)
+            promo_knight.grid(row=0, column=3, padding_x=1, padding_y=1)
             promo.mainloop()
         return
 
@@ -468,11 +468,11 @@ class App(tk.Frame):
 
     # checks whether the piece can move to square 2 with respect to their movement capabilities.
     def allowed_piece_move(self): 
-        # redefining pyimages for readability
+        # redefining pyimage for readability
         wb,wk,wn,wp,wq,wr="pyimage1","pyimage3","pyimage4","pyimage5","pyimage6","pyimage7" 
         bb,bk,bn,bp,bq,br="pyimage8","pyimage10","pyimage11","pyimage12","pyimage13","pyimage14"
 
-        # for when this function is called for check.
+        # for when this function is called.
         if self.sq1_button["image"]=="pyimage2" or self.sq1_button["image"]=="pyimage9":
             return False
 
