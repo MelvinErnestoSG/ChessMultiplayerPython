@@ -457,6 +457,66 @@ class App(tk.Frame):
                 play_sound_capture(self)
                 return True
 
+        # movement of the castle to white in long shape.
+            if self.sq1_button["image"]==wk and self.sq2=="c1": 
+                play_sound_move(self)
+                # checks to see if squares in between rook and king 
+                # are empty and are not a possible move for opponent.
+                for x in range(1,4): 
+                    square_button = self.squares[self.ranks[x]+str(1)]
+                    if square_button["image"]!="pyimage2":
+                        return False
+                    self.squares["a1"].config(image="pyimage2")
+                    self.squares["a1"].image="pyimage2"
+                    self.squares["d1"].config(image="pyimage7")
+                    self.squares["d1"].image=("pyimage7")
+                    return True
+
+        # movement of the castle to white in short form.
+            if self.sq1_button["image"]==wk and self.sq2=="g1":
+                play_sound_move(self)
+                # checks to see if squares in between rook and king 
+                # are empty and are not a possible move for opponent.
+                for x in range(5,7):
+                    square_button = self.squares[self.ranks[x]+str(1)]
+                    if square_button["image"]!="pyimage2":
+                        return False
+                    self.squares["h1"].config(image="pyimage2")
+                    self.squares["h1"].image="pyimage2"
+                    self.squares["f1"].config(image="pyimage7")
+                    self.squares["f1"].image=("pyimage7")
+                    return True
+
+        # movement of the castle to black in long form.
+            if self.sq1_button["image"]==bk and self.sq2=="c8":
+                play_sound_move(self)
+                # checks to see if squares in between rook and king 
+                # are empty and are not a possible move for opponent.
+                for x in range(1,3):
+                    square_button = self.squares[self.ranks[x]+str(8)]
+                    if square_button["image"] != "pyimage2":
+                        return False
+                    self.squares["a8"].config(image="pyimage2")
+                    self.squares["a8"].image="pyimage2"
+                    self.squares["d8"].config(image="pyimage14")
+                    self.squares["d8"].image=("pyimage14")
+                    return True
+
+        # movement of the castle to black in short form.
+            if self.sq1_button["image"]==bk and self.sq2=="g8":
+                play_sound_move(self)
+                # checks to see if squares in between rook and king 
+                # are empty and are not a possible move for opponent.
+                for x in range(5,7): 
+                    square_button = self.squares[self.ranks[x]+str(8)]
+                    if square_button["image"]!="pyimage2":
+                        return False
+                    self.squares["h8"].config(image="pyimage2")
+                    self.squares["h8"].image="pyimage2"
+                    self.squares["f8"].config(image="pyimage14")
+                    self.squares["f8"].image=("pyimage14")
+                    return True
+
         # queen movement.
         if (self.sq1_button["image"]==wq or self.sq1_button["image"]==bq) and self.clear_path("queen"):
             # makes sure there is equal change between file and rank movement.
