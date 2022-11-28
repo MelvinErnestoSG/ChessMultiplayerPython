@@ -20,7 +20,7 @@ from threading import Thread
 from tkinter import messagebox
 
 # import dimensions and castling.
-from Const import DIMENSION,CASTLING_WHITE,CASTLING_BLACK,SIZE,LEFT,UP,LIGHT,DARK,WHITE
+from Const import DIMENSION,SIZE,LEFT,UP,LIGHT,DARK,WHITE
 
 # help with importing playsound.
 # pip install playsound 
@@ -691,14 +691,14 @@ class App(tk.Frame):
                             }
 
         dict_rank2_pieces = {
-                                "a2":"p.png", 
-                                "b2":"p.png", 
-                                "c2":"p.png", 
-                                "d2":"p.png", 
-                                "e2":"p.png", 
-                                "f2":"p.png", 
-                                "g2":"p.png", 
-                                "h2":"p.png",
+                                "a2":"wp.png", 
+                                "b2":"wp.png", 
+                                "c2":"wp.png", 
+                                "d2":"wp.png", 
+                                "e2":"wp.png", 
+                                "f2":"wp.png", 
+                                "g2":"wp.png", 
+                                "h2":"wp.png",
                             }    
 
         dict_rank7_pieces = {
