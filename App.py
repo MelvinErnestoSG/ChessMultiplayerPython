@@ -107,7 +107,7 @@ class App(tk.Frame):
         # button associated with the square light and dark
         self.piece_color=None
 
-        # for castling
+        # for make castling
         self.white_king_moved=False 
         self.white_rook1_moved=False
         self.white_rook2_moved=False
@@ -117,9 +117,6 @@ class App(tk.Frame):
         self.black_rook2_moved=False
 
         self.castled=False
-
-        # for castling
-        self.enpassant=False
 
     # call other functions.
     def __call__(self):
