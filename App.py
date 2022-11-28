@@ -200,7 +200,7 @@ class App(tk.Frame):
                 
                 # prevents self-destruction and allows the user to choose a new piece.
                 if self.sq2==self.sq1:
-                    self.buttons_pressed=0
+                    self.buttons_pressed=True
                     return
 
                 # makes sure the move is legal.
@@ -243,15 +243,15 @@ class App(tk.Frame):
         def return_piece(piece): 
             self.squares[self.sq2].config(image=piece)
             self.squares[self.sq2].image=piece
-            promo.destroy()
+            promoted.destroy()
 
         # creates a new menu with buttons depending on pawn color.
-        promo = tk.Tk() 
-        promo.title("Play Chess")
-        promo.iconbitmap(os.path.join("./icon/ChessPieces.ico"))
-        promo.geometry("+600+300")
-        promo.config(width=500, height=135, background="#000")
-        promo.resizable(0, 0)
+        promoted = tk.Tk() 
+        promoted.title("Play Chess")
+        promoted.iconbitmap(os.path.join("./icon/ChessPieces.ico"))
+        promoted.geometry("+600+300")
+        promoted.config(width=500, height=135, background="#000")
+        promoted.resizable(0, 0)
 
         #https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
         #white_figures = { 'king': '♔', 'queen': '♕', 'rook': '♖', 'bishop': '♗', 'knight': '♘', 'pawn': '♙'}
@@ -259,8 +259,8 @@ class App(tk.Frame):
 
         if color == "white":
             # triggers return_piece function when selected.
-            promo_queen = tk.Button (
-                                        promo, 
+            promoted_queen = tk.Button (
+                                        promoted, 
                                         text="♕",
                                         font=("monospace",45,"bold"),
                                         bg=DARK,
@@ -269,10 +269,10 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage6")
                                     )
-            promo_queen.grid(row=0, column=0, padx=1, pady=1)
+            promoted_queen.grid(row=0, column=0, padx=1, pady=1)
 
-            promo_rook = tk.Button  (
-                                        promo, 
+            promoted_rook = tk.Button  (
+                                        promoted, 
                                         text="♖", 
                                         font=("monospace",45,"bold"),
                                         bg=DARK,
@@ -281,10 +281,10 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage7")
                                     )
-            promo_rook.grid(row=0, column=1, padx=1, pady=1)
+            promoted_rook.grid(row=0, column=1, padx=1, pady=1)
 
-            promo_bishop = tk.Button(
-                                        promo, 
+            promoted_bishop = tk.Button(
+                                        promoted, 
                                         text="♗", 
                                         font=("monospace",45,"bold"),
                                         bg=DARK,
@@ -293,10 +293,10 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage1")
                                     )
-            promo_bishop.grid(row=0, column=2, padx=1, pady=1)
+            promoted_bishop.grid(row=0, column=2, padx=1, pady=1)
 
-            promo_knight = tk.Button(
-                                        promo, 
+            promoted_knight = tk.Button(
+                                        promoted, 
                                         text="♘", 
                                         font=("monospace",45,"bold"),
                                         bg=DARK,
@@ -305,12 +305,12 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage4")
                                     ) 
-            promo_knight.grid(row=0, column=3, padx=1, pady=1)
+            promoted_knight.grid(row=0, column=3, padx=1, pady=1)
 
         elif color == "black":
             # triggers return piece function when selected.
-            promo_queen = tk.Button(
-                                        promo, 
+            promoted_queen = tk.Button(
+                                        promoted, 
                                         text="♛", 
                                         font=("monospace",45,"bold"),
                                         bg=LIGHT,
@@ -319,10 +319,10 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage13")
                                     )
-            promo_queen.grid(row=0, column=0, padx=1, pady=1)
+            promoted_queen.grid(row=0, column=0, padx=1, pady=1)
 
-            promo_rook = tk.Button  (
-                                        promo, 
+            promoted_rook = tk.Button  (
+                                        promoted, 
                                         text="♜", 
                                         font=("monospace",45,"bold"),
                                         bg=LIGHT,
@@ -331,10 +331,10 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage14")
                                     )
-            promo_rook.grid(row=0, column=1, padx=1, pady=1)
+            promoted_rook.grid(row=0, column=1, padx=1, pady=1)
 
-            promo_bishop = tk.Button(
-                                        promo, 
+            promoted_bishop = tk.Button(
+                                        promoted, 
                                         text="♝", 
                                         font=("monospace",45,"bold"),
                                         bg=LIGHT,
@@ -343,10 +343,10 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage8")
                                     )
-            promo_bishop.grid(row=0, column=2, padx=1, pady=1)
+            promoted_bishop.grid(row=0, column=2, padx=1, pady=1)
 
-            promo_knight = tk.Button(
-                                        promo, 
+            promoted_knight = tk.Button(
+                                        promoted, 
                                         text="♞", 
                                         font=("monospace",45,"bold"),
                                         bg=LIGHT,
@@ -355,8 +355,8 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage11")
                                     )
-            promo_knight.grid(row=0, column=3, padx=1, pady=1)
-            promo.mainloop()
+            promoted_knight.grid(row=0, column=3, padx=1, pady=1)
+            promoted.mainloop()
 
     # show message box in the screen.
     def show_message(self):
@@ -545,7 +545,7 @@ class App(tk.Frame):
                 play_sound_move(self)
                 return True
 
-            # allows the capturing of diagonal pieces if there is an opponent piece there.      
+            # allows the capturing of diagonal pieces if there is an opponent piece there.
             if int(self.sq1[1])+1==int(self.sq2[1]) and abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1 and self.sq2_button["image"]!="pyimage2":
                 play_sound_capture(self)
                 return True
@@ -691,14 +691,14 @@ class App(tk.Frame):
                             }
 
         dict_rank2_pieces = {
-                                "a2":"wp.png", 
-                                "b2":"wp.png", 
-                                "c2":"wp.png", 
-                                "d2":"wp.png", 
-                                "e2":"wp.png", 
-                                "f2":"wp.png", 
-                                "g2":"wp.png", 
-                                "h2":"wp.png",
+                                "a2":"p.png", 
+                                "b2":"p.png", 
+                                "c2":"p.png", 
+                                "d2":"p.png", 
+                                "e2":"p.png", 
+                                "f2":"p.png", 
+                                "g2":"p.png", 
+                                "h2":"p.png",
                             }    
 
         dict_rank7_pieces = {
