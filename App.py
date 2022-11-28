@@ -22,8 +22,8 @@ from tkinter import messagebox
 # import dimensions and castling.
 from Const import DIMENSION,CASTLING_WHITE,CASTLING_BLACK,SIZE,LEFT,UP,LIGHT,DARK,WHITE
 
-# help with importing play sound.
-# pip install play sound 
+# help with importing playsound.
+# pip install playsound 
 from playsound import playsound 
 #--------------------------------------#
 # speak function.
@@ -57,8 +57,7 @@ def play_sound_capture(captured=False):
         capture_sound()
     else:
         move_sound()
-#--------------------------------------#
-#self=Frame, parent=root
+
 class App(tk.Frame):
     def __init__(self, parent, height, width): 
         parent.iconbitmap(os.path.join('./icon/ChessPieces.ico'))
@@ -107,22 +106,11 @@ class App(tk.Frame):
         # button associated with the square light and dark
         self.piece_color=None
 
-        # for make castling
-        self.white_king_moved=False 
-        self.white_rook1_moved=False
-        self.white_rook2_moved=False
-
-        self.black_king_moved=False
-        self.black_rook1_moved=False
-        self.black_rook2_moved=False
-
-        self.castled=False
-
     # call other functions.
     def __call__(self):
         self.set_squares()
         self.set_alpha_color()
-        self.import_pieces()
+        self.set_import_pieces()
         self.set_pieces()
         self.mainloop()
 
@@ -212,7 +200,7 @@ class App(tk.Frame):
                 
                 # prevents self-destruction and allows the user to choose a new piece.
                 if self.sq2==self.sq1:
-                    self.buttons_pressed=False
+                    self.buttons_pressed=0
                     return
 
                 # makes sure the move is legal.
@@ -241,30 +229,13 @@ class App(tk.Frame):
                         
                         self.squares[previous_sq1].config(image=previous_sq1_button_piece)
                         self.squares[previous_sq1].image=previous_sq1_button_piece
-                        return
                     else:
-                        # runs if king is not in check, 
-                        # checks if kings or rooks have moved, 
-                        # preventing castling in the future.
-                        if previous_sq1_button_piece=="pyimage3":
-                            self.white_king_moved==True
-                        if previous_sq1_button_piece=="pyimage10":
-                            self.black_king_moved==True
-                        if previous_sq1_button_piece=="pyimage7" and previous_sq1=="a1":
-                            self.white_rook1_moved==True
-                        if previous_sq1_button_piece=="pyimage7" and previous_sq1=="h1":
-                            self.white_rook2_moved==True
-                        if previous_sq1_button_piece=="pyimage14" and previous_sq1=="a8":
-                            self.black_rook1_moved==True
-                        if previous_sq1_button_piece=="pyimage14" and previous_sq1=="h8":
-                            self.black_rook2_moved=True
                         self.turns+=1  
                         # checks for possible pawn promotion.                 
                         if (button["image"]=="pyimage5" and previous_sq2.count("8")==1) or (button["image"]=="pyimage12" and previous_sq2.count("1")==1):
                             self.promotion_menu(self.piece_color)
-                        self.castled==False
         else:
-            return
+            self.buttons_pressed=True
 
     # creates menu to choose what piece to change the pawn to.
     def promotion_menu(self,color): 
@@ -273,7 +244,6 @@ class App(tk.Frame):
             self.squares[self.sq2].config(image=piece)
             self.squares[self.sq2].image=piece
             promo.destroy()
-            return
 
         # creates a new menu with buttons depending on pawn color.
         promo = tk.Tk() 
@@ -299,7 +269,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage6")
                                     )
-            promo_queen.grid(row=0, column=0, padding_x=1, padding_y=1)
+            promo_queen.grid(row=0, column=0, padx=1, pady=1)
 
             promo_rook = tk.Button  (
                                         promo, 
@@ -311,7 +281,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage7")
                                     )
-            promo_rook.grid(row=0, column=1, padding_x=1, padding_y=1)
+            promo_rook.grid(row=0, column=1, padx=1, pady=1)
 
             promo_bishop = tk.Button(
                                         promo, 
@@ -323,7 +293,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage1")
                                     )
-            promo_bishop.grid(row=0, column=2, padding_x=1, padding_y=1)
+            promo_bishop.grid(row=0, column=2, padx=1, pady=1)
 
             promo_knight = tk.Button(
                                         promo, 
@@ -335,10 +305,10 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage4")
                                     ) 
-            promo_knight.grid(row=0, column=3, padding_x=1, padding_y=1)
+            promo_knight.grid(row=0, column=3, padx=1, pady=1)
 
         elif color == "black":
-            # triggers return_piece function when selected.
+            # triggers return piece function when selected.
             promo_queen = tk.Button(
                                         promo, 
                                         text="♛", 
@@ -349,7 +319,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage13")
                                     )
-            promo_queen.grid(row=0, column=0, padding_x=1, padding_y=1)
+            promo_queen.grid(row=0, column=0, padx=1, pady=1)
 
             promo_rook = tk.Button  (
                                         promo, 
@@ -361,7 +331,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage14")
                                     )
-            promo_rook.grid(row=0, column=1, padding_x=1, padding_y=1)
+            promo_rook.grid(row=0, column=1, padx=1, pady=1)
 
             promo_bishop = tk.Button(
                                         promo, 
@@ -373,7 +343,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage8")
                                     )
-            promo_bishop.grid(row=0, column=2, padding_x=1, padding_y=1)
+            promo_bishop.grid(row=0, column=2, padx=1, pady=1)
 
             promo_knight = tk.Button(
                                         promo, 
@@ -385,9 +355,8 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage11")
                                     )
-            promo_knight.grid(row=0, column=3, padding_x=1, padding_y=1)
+            promo_knight.grid(row=0, column=3, padx=1, pady=1)
             promo.mainloop()
-        return
 
     # show message box in the screen.
     def show_message(self):
@@ -472,14 +441,9 @@ class App(tk.Frame):
         wb,wk,wn,wp,wq,wr="pyimage1","pyimage3","pyimage4","pyimage5","pyimage6","pyimage7" 
         bb,bk,bn,bp,bq,br="pyimage8","pyimage10","pyimage11","pyimage12","pyimage13","pyimage14"
 
-        # for when this function is called.
+        # for when this function is called for check.
         if self.sq1_button["image"]=="pyimage2" or self.sq1_button["image"]=="pyimage9":
             return False
-
-        # king castle.
-        if self.castle() is True:
-            play_sound_move(self)
-            return True
 
         # king movement.
         if self.sq1_button["image"]==wk or self.sq1_button["image"]==bk:
@@ -608,71 +572,6 @@ class App(tk.Frame):
                 play_sound_capture(self)
                 return True
 
-    # checks to see if the move entails a castle, and if a castle is allowed.
-    def castle(self): 
-        # makes sure king has not moved.
-        if self.white_king_moved==False: 
-            # finds out which way user wants to castle and if the rook has moved
-            # (in this case white would want to castle to the left).
-            if self.white_rook1_moved==False and self.sq2=="c1":
-                # checks to see if squares in between rook and king 
-                # are empty and are not a possible move for opponent.
-                for x in range(1,4):
-                    square_button=self.squares[self.ranks[x]+str(CASTLING_WHITE)]
-                    if square_button["image"]!="pyimage2":
-                        return False
-                    self.squares["a1"].config(image="pyimage2")
-                    self.squares["a1"].image=("pyimage2")
-                    self.squares["d1"].config(image="pyimage7")
-                    self.squares["d1"].image=("pyimage7")
-                    self.castled=True
-                    return True
-
-            if self.white_rook2_moved==False and self.sq2=="g1":
-                # checks to see if squares in between rook and king 
-                # are empty and are not a possible move for opponent.
-                for x in range(5,7):
-                    square_button=self.squares[self.ranks[x]+str(CASTLING_WHITE)]
-                    if square_button["image"]!="pyimage2":
-                        return False
-                    self.squares["h1"].config(image="pyimage2")
-                    self.squares["h1"].image=("pyimage2")
-                    self.squares["f1"].config(image="pyimage7")
-                    self.squares["f1"].image=("pyimage7")
-                    self.castled=True
-                    return True
-
-        if self.black_king_moved==False:
-            if self.black_rook1_moved==False and self.sq2=="c8":
-                # checks to see if squares in between rook and king 
-                # are empty and are not a possible move for opponent.
-                for x in range(1,3):
-                    square_button=self.squares[self.ranks[x]+str(CASTLING_BLACK)]
-                    if square_button["image"]!="pyimage2":
-                        return False
-                    self.squares["a8"].config(image="pyimage2")
-                    self.squares["a8"].image=("pyimage2")
-                    self.squares["d8"].config(image="pyimage14")
-                    self.squares["d8"].image=("pyimage14")
-                    self.castled=True
-                    return True
-
-            if self.black_rook2_moved==False and self.sq2=="g8":
-                # checks to see if squares in between rook and king 
-                # are empty and are not a possible move for opponent.
-                for x in range(5,7): 
-                    square_button=self.squares[self.ranks[x]+str(CASTLING_BLACK)]
-                    if square_button["image"]!="pyimage2":
-                        return False
-                    self.squares["h8"].config(image="pyimage2")
-                    self.squares["h8"].image=("pyimage2")
-                    self.squares["f8"].config(image="pyimage14")
-                    self.squares["f8"].image=("pyimage14")
-                    self.castled=True
-                    return True
-        else:
-            return False
-
     # prevents a move if king is under attack.
     def in_check(self): 
         # stores current values assigned to values.
@@ -758,7 +657,7 @@ class App(tk.Frame):
 
     # opens and stores images of pieces and prepares
     # the pieces for the game for both sides.
-    def import_pieces(self):
+    def set_import_pieces(self):
         # stores white pieces images into dicts.
         path=os.path.join(os.path.dirname(__file__),"white") 
         w_dirs=os.listdir(path)
