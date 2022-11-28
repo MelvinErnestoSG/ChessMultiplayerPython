@@ -22,8 +22,8 @@ from tkinter import messagebox
 # import dimensions and castling.
 from Const import DIMENSION,CASTLING_WHITE,CASTLING_BLACK,SIZE,LEFT,UP,LIGHT,DARK,WHITE
 
-# pip install playsound 
 # help with importing playsound.
+# pip install playsound 
 from playsound import playsound 
 #--------------------------------------#
 # speak function.
@@ -44,12 +44,19 @@ def move_sound():
 def capture_sound(): 
     playsound('capture.wav')
 #--------------------------------------#
-# call sound when is captured pieces.
-def play_sound(captured=False):
-    if captured:
+# call sound when is moved pieces.
+def play_sound_move(moved=False):
+    if moved:
         move_sound()
     else:
         capture_sound()
+#--------------------------------------#
+# call sound when is captured pieces.
+def play_sound_capture(captured=False):
+    if captured:
+        capture_sound()
+    else:
+        move_sound()
 #--------------------------------------#
 #self=Frame, parent=root
 class App(tk.Frame):
@@ -110,6 +117,9 @@ class App(tk.Frame):
         self.black_rook2_moved=False
 
         self.castled=False
+
+        # for castling
+        self.enpassant=False
 
     # call other functions.
     def __call__(self):
@@ -183,14 +193,12 @@ class App(tk.Frame):
         #checks color of first piece
         if button["image"] in self.white_pieces and self.buttons_pressed==False: 
             self.piece_color="white"
-            play_sound(self)
         
         elif button["image"] in self.black_pieces and self.buttons_pressed==False:
             self.piece_color="black" 
-            play_sound(self)
         
         # prevents people from moving their pieces when it's not heir turn.
-        if (self.piece_color=="white" and self.turns%2==0) or (self.piece_color=="black" and self.turns%2==1) or self.buttons_pressed==1:
+        if (self.piece_color=="white" and self.turns%2==0) or (self.piece_color=="black" and self.turns%2==1) or self.buttons_pressed==True:
             # stores square and button of first square selected.
             if self.buttons_pressed==False: 
                 # retrieves position of piece
@@ -468,34 +476,96 @@ class App(tk.Frame):
         bb,bk,bn,bp,bq,br="pyimage8","pyimage10","pyimage11","pyimage12","pyimage13","pyimage14"
 
         # for when this function is called for check.
-        if self.sq1_button["image"]=="pyimage2" or self.sq1_button["image"]=="pyimage9": 
+        if self.sq1_button["image"]=="pyimage2" or self.sq1_button["image"]=="pyimage9":
             return False
+
+        # king castle.
+        if self.castle() is True:
+            play_sound_move(self)
+            return True
+
+        # king movement.
+        if self.sq1_button["image"]==wk or self.sq1_button["image"]==bk:
+            # allows 1 square when move.
+            if (abs(int(self.sq1[1])-int(self.sq2[1]))<2) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])))<2 and self.sq2_button["image"]=="pyimage2":
+                play_sound_move(self)
+                return True
+
+            # allows 1 square when capture.
+            if (abs(int(self.sq1[1])-int(self.sq2[1]))<2) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])))<2 and self.sq2_button["image"]!="pyimage2":
+                play_sound_capture(self)
+                return True
+
+        # queen movement.
+        if (self.sq1_button["image"]==wq or self.sq1_button["image"]==bq) and self.clear_path("queen"):
+            # makes sure there is equal change between file and rank movement.
+            # allows the moving of pieces as rook.
+            if int(self.sq1[1])==int(self.sq2[1]) and self.sq2_button["image"]=="pyimage2" or self.sq1[0]==self.sq2[0] and self.sq2_button["image"]=="pyimage2": 
+                play_sound_move(self)
+                return True
+
+            # allows the capturing of pieces as rook.
+            if int(self.sq1[1])==int(self.sq2[1]) and self.sq2_button["image"]!="pyimage2" or self.sq1[0]==self.sq2[0] and self.sq2_button["image"]!="pyimage2": 
+                play_sound_capture(self)
+                return True
+
+            # allows the moving of pieces as bishop.
+            if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                play_sound_move(self)
+                return True
+
+            # allows the capturing of pieces as bishop.
+            if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])):
+                play_sound_capture(self)
+                return True
 
         # bishop movement.     
         if (self.sq1_button["image"]==wb or self.sq1_button["image"]==bb) and self.clear_path("bishop"):
             # makes sure there is equal change between file and rank movement.
+            # allows the moving of pieces as bishop.
+            if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2": 
+                play_sound_move(self)
+                return True
+
+            # allows the capturing of pieces as bishop.
             if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])): 
+                play_sound_capture(self)
                 return True
 
         # knight movement.
         if self.sq1_button["image"]==wn or self.sq1_button["image"]==bn:
-            # allows tall L moves.
-            if (abs(int(self.sq1[1])-int(self.sq2[1]))==2) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1):
+            # allows tall L moves if there is not an opponent piece there.
+            if (abs(int(self.sq1[1])-int(self.sq2[1]))==2) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1) and self.sq2_button["image"]=="pyimage2":
+                play_sound_move(self)
                 return True
 
-            # allows wide L moves.
-            if (abs(int(self.sq1[1])-int(self.sq2[1]))==1) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==2): 
+            # allows tall L moves if there is an opponent piece there can make the capture.
+            if (abs(int(self.sq1[1])-int(self.sq2[1]))==2) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1) and self.sq2_button["image"]!="pyimage2":
+                play_sound_capture(self)
                 return True
 
-        # king movement.
-        if self.sq1_button["image"]==wk or self.sq1_button["image"]==bk:
-            # allows 1 square moves.
-            if (abs(int(self.sq1[1])-int(self.sq2[1]))<2) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])))<2:
+            # allows wide L moves if there is not an opponent piece there.
+            if (abs(int(self.sq1[1])-int(self.sq2[1]))==1) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==2) and self.sq2_button["image"]=="pyimage2": 
+                play_sound_move(self)
                 return True
 
-        # king castle.
-        if self.castle() is True:
-            return True
+            # allows wide L moves if there is not an opponent piece there can make the capture.
+            if (abs(int(self.sq1[1])-int(self.sq2[1]))==1) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==2) and self.sq2_button["image"]!="pyimage2": 
+                play_sound_capture(self)
+                return True
+
+        # rook movement.
+        if (self.sq1_button["image"]==wr or self.sq1_button["image"]==br) and self.clear_path("rook"): 
+            # only allows movement within same rank or file.
+            # allows the moving of pieces as rook.
+            if int(self.sq1[1])==int(self.sq2[1]) and self.sq2_button["image"]=="pyimage2" or self.sq1[0]==self.sq2[0] and self.sq2_button["image"]=="pyimage2":
+                play_sound_move(self)
+                return True
+            
+            # allows the capturing of pieces as rook.
+            if int(self.sq1[1])==int(self.sq2[1]) and self.sq2_button["image"]!="pyimage2" or self.sq1[0]==self.sq2[0] and self.sq2_button["image"]!="pyimage2":
+                play_sound_capture(self)
+                return True
 
         # white pawn movement.
         if self.sq1_button["image"]==wp:
@@ -503,18 +573,20 @@ class App(tk.Frame):
             if "2" in self.sq1: 
                 # allows 2 sq movement.
                 if int(self.sq1[1])+1==int(self.sq2[1]) or int(self.sq1[1])+2==int(self.sq2[1]) and self.sq1[0]==self.sq2[0] and self.sq2_button["image"]=="pyimage2":
-                    in_front=self.squares[self.sq1[0]+str(int(self.sq1[1])+1)]
-
                     # makes sure that there is no piece blocking path.
+                    in_front=self.squares[self.sq1[0]+str(int(self.sq1[1])+1)]
                     if in_front["image"]=="pyimage2": 
+                        play_sound_move(self)
                         return True
 
             # allows 1 sq movement.           
-            if int(self.sq1[1])+1==int(self.sq2[1]) and self.sq1[0]==self.sq2[0] and self.sq2_button["image"]=="pyimage2": 
+            if int(self.sq1[1])+1==int(self.sq2[1]) and self.sq1[0]==self.sq2[0] and self.sq2_button["image"]=="pyimage2":
+                play_sound_move(self)
                 return True
 
-            # allows the capturing of diagonal pieces.       
-            if int(self.sq1[1])+1==int(self.sq2[1]) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])))==1 and self.sq2_button["image"]!="pyimage2": 
+            # allows the capturing of diagonal pieces if there is an opponent piece there.      
+            if int(self.sq1[1])+1==int(self.sq2[1]) and abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1 and self.sq2_button["image"]!="pyimage2":
+                play_sound_capture(self)
                 return True
 
         # black pawn movement.
@@ -522,32 +594,22 @@ class App(tk.Frame):
             # allows for 2 space jump from starting position.
             if "7" in self.sq1: 
                 # only allows it to move straight 1 or 2 sql.
-                if int(self.sq1[1])==int(self.sq2[1])+1 or int(self.sq1[1])==int(self.sq2[1])+2 and self.sq1[0]==self.sq2[0] and self.sq2_button["image"]=="pyimage2": 
-                    return True
-
+                if int(self.sq1[1])==int(self.sq2[1])+1 or int(self.sq1[1])==int(self.sq2[1])+2 and self.sq1[0]==self.sq2[0] and self.sq2_button["image"]=="pyimage2":
+                    # makes sure that there is no piece blocking path.
+                    in_front=self.squares[self.sq1[0]+str(int(self.sq1[1])+1)]
+                    if in_front["image"]!="pyimage2": 
+                        play_sound_move(self)
+                        return True
+            
+            # allows 1 sq movement.
             if int(self.sq1[1])==int(self.sq2[1])+1 and self.sq1[0]==self.sq2[0] and self.sq2_button["image"]=="pyimage2":
+                play_sound_move(self)
                 return True
 
             # allows the capturing of diagonal pieces if there is an opponent piece there.
             if int(self.sq1[1])==int(self.sq2[1])+1 and abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1 and self.sq2_button["image"]!="pyimage2":
+                play_sound_capture(self)
                 return True
-
-        # queen movement.
-        if (self.sq1_button["image"]==wq or self.sq1_button["image"]==bq) and self.clear_path("queen"):
-            # only allows movement within same rank or file.
-            if int(self.sq1[1])==int(self.sq2[1]) or self.sq1[0]==self.sq2[0]: 
-                return True
-
-            # allows the capturing of pieces if there is an opponent piece there.
-            if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])):
-                return True
-
-        # rook movement.
-        if (self.sq1_button["image"]==wr or self.sq1_button["image"]==br) and self.clear_path("rook"): 
-            # only allows movement within same rank or file.
-            if int(self.sq1[1])==int(self.sq2[1]) or self.sq1[0]==self.sq2[0]:
-                return True
-        return False
 
     # checks to see if the move entails a castle, and if a castle is allowed.
     def castle(self): 
@@ -563,7 +625,7 @@ class App(tk.Frame):
                     if square_button["image"]!="pyimage2":
                         return False
                     self.squares["a1"].config(image="pyimage2")
-                    self.squares["a1"].image="pyimage2"
+                    self.squares["a1"].image=("pyimage2")
                     self.squares["d1"].config(image="pyimage7")
                     self.squares["d1"].image=("pyimage7")
                     self.castled=True
@@ -577,7 +639,7 @@ class App(tk.Frame):
                     if square_button["image"]!="pyimage2":
                         return False
                     self.squares["h1"].config(image="pyimage2")
-                    self.squares["h1"].image="pyimage2"
+                    self.squares["h1"].image=("pyimage2")
                     self.squares["f1"].config(image="pyimage7")
                     self.squares["f1"].image=("pyimage7")
                     self.castled=True
@@ -592,7 +654,7 @@ class App(tk.Frame):
                     if square_button["image"]!="pyimage2":
                         return False
                     self.squares["a8"].config(image="pyimage2")
-                    self.squares["a8"].image="pyimage2"
+                    self.squares["a8"].image=("pyimage2")
                     self.squares["d8"].config(image="pyimage14")
                     self.squares["d8"].image=("pyimage14")
                     self.castled=True
@@ -606,7 +668,7 @@ class App(tk.Frame):
                     if square_button["image"]!="pyimage2":
                         return False
                     self.squares["h8"].config(image="pyimage2")
-                    self.squares["h8"].image="pyimage2"
+                    self.squares["h8"].image=("pyimage2")
                     self.squares["f8"].config(image="pyimage14")
                     self.squares["f8"].image=("pyimage14")
                     self.castled=True
@@ -790,7 +852,7 @@ class App(tk.Frame):
         for rank in range(3,7): 
             for file in range(DIMENSION):
                 starting_piece="blank.png"
-                position = self.ranks[file]+str(rank)
+                position=self.ranks[file]+str(rank)
                 self.squares[position].config(image=self.white_images[starting_piece])
                 self.squares[position].image=self.white_images[starting_piece]
 
