@@ -217,11 +217,11 @@ class App(tk.Frame):
 
                 # makes sure the move is legal.
                 if self.allowed_piece_move() and self.friendly_fire()==False:
-                    prev_sq1=self.sq1
-                    prev_sq1_button_piece=self.sq1_button["image"]
+                    previous_sq1=self.sq1
+                    previous_sq1_button_piece=self.sq1_button["image"]
                 
-                    prev_sq2=self.sq2
-                    prev_sq2_button_piece=self.sq2_button["image"]
+                    previous_sq2=self.sq2
+                    previous_sq2_button_piece=self.sq2_button["image"]
 
                     # moves piece in sq1 to sq2
                     self.squares[self.sq2].config(image=self.sq1_button["image"]) 
@@ -236,31 +236,31 @@ class App(tk.Frame):
                     if self.in_check()==True and self.castled==False:
                         # reverts movement since king is 
                         # or would be put into check because of move
-                        self.squares[prev_sq2].config(image=prev_sq2_button_piece) 
-                        self.squares[prev_sq2].image=prev_sq2_button_piece
+                        self.squares[previous_sq2].config(image=previous_sq2_button_piece) 
+                        self.squares[previous_sq2].image=previous_sq2_button_piece
                         
-                        self.squares[prev_sq1].config(image=prev_sq1_button_piece)
-                        self.squares[prev_sq1].image=prev_sq1_button_piece
+                        self.squares[previous_sq1].config(image=previous_sq1_button_piece)
+                        self.squares[previous_sq1].image=previous_sq1_button_piece
                         return
                     else:
                         # runs if king is not in check, 
                         # checks if kings or rooks have moved, 
                         # preventing castling in the future.
-                        if prev_sq1_button_piece=="pyimage3":
+                        if previous_sq1_button_piece=="pyimage3":
                             self.white_king_moved==True
-                        if prev_sq1_button_piece=="pyimage10":
+                        if previous_sq1_button_piece=="pyimage10":
                             self.black_king_moved==True
-                        if prev_sq1_button_piece=="pyimage7" and prev_sq1=="a1":
+                        if previous_sq1_button_piece=="pyimage7" and previous_sq1=="a1":
                             self.white_rook1_moved==True
-                        if prev_sq1_button_piece=="pyimage7" and prev_sq1=="h1":
+                        if previous_sq1_button_piece=="pyimage7" and previous_sq1=="h1":
                             self.white_rook2_moved==True
-                        if prev_sq1_button_piece=="pyimage14" and prev_sq1=="a8":
+                        if previous_sq1_button_piece=="pyimage14" and previous_sq1=="a8":
                             self.black_rook1_moved==True
-                        if prev_sq1_button_piece=="pyimage14" and prev_sq1=="h8":
+                        if previous_sq1_button_piece=="pyimage14" and previous_sq1=="h8":
                             self.black_rook2_moved=True
                         self.turns+=1  
                         # checks for possible pawn promotion.                 
-                        if (button["image"]=="pyimage5" and prev_sq2.count("8")==1) or (button["image"]=="pyimage12" and prev_sq2.count("1")==1):
+                        if (button["image"]=="pyimage5" and previous_sq2.count("8")==1) or (button["image"]=="pyimage12" and previous_sq2.count("1")==1):
                             self.promotion_menu(self.piece_color)
                         self.castled==False
         else:
