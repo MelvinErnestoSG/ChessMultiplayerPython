@@ -112,13 +112,13 @@ class App(tk.Frame):
     # call other functions.
     def __call__(self):
         self.set_squares()
-        self.set_alpha_color()
+        self.set_alpha_colors()
         self.set_import_pieces()
         self.set_pieces()
         self.mainloop()
 
     # letters and numbers above the buttons.
-    def set_alpha_color(self):
+    def set_alpha_colors(self):
         font_size=7
         letters=[
                     [' h ',' g ',' f ',' e ',' d ',' c ',' b ',' a '],
@@ -201,7 +201,7 @@ class App(tk.Frame):
                 self.sq2_button=button
                 self.buttons_pressed-=1
                 
-                # prevents self-destruction and allows the user to choose a new piece.
+                # prevents self destruction and allows the user to choose a new piece.
                 if self.sq2==self.sq1:
                     self.buttons_pressed=True
                     return
@@ -226,7 +226,7 @@ class App(tk.Frame):
                     # so I set up a variable here that would prevent this code from running.
                     if self.in_check()==True and self.castled==False:
                         # reverts movement since king is 
-                        # or would be put into check because of move
+                        # or would be put into check because of move.
                         self.squares[previous_sq2].config(image=previous_sq2_button_piece) 
                         self.squares[previous_sq2].image=previous_sq2_button_piece
                         
@@ -272,7 +272,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage6")
                                     )
-            promoted_queen.grid(row=0, column=0, padx=1, pady=1)
+            promoted_queen.grid(row=0, column=0, padding_x=1, padding_y=1)
 
             promoted_rook = tk.Button  (
                                         promoted, 
@@ -284,7 +284,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage7")
                                     )
-            promoted_rook.grid(row=0, column=1, padx=1, pady=1)
+            promoted_rook.grid(row=0, column=1, padding_x=1, padding_y=1)
 
             promoted_bishop = tk.Button(
                                         promoted, 
@@ -296,7 +296,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage1")
                                     )
-            promoted_bishop.grid(row=0, column=2, padx=1, pady=1)
+            promoted_bishop.grid(row=0, column=2, padding_x=1, padding_y=1)
 
             promoted_knight = tk.Button(
                                         promoted, 
@@ -308,7 +308,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage4")
                                     ) 
-            promoted_knight.grid(row=0, column=3, padx=1, pady=1)
+            promoted_knight.grid(row=0, column=3, padding_x=1, padding_y=1)
 
         elif color == "black":
             # triggers return piece function when selected.
@@ -322,7 +322,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage13")
                                     )
-            promoted_queen.grid(row=0, column=0, padx=1, pady=1)
+            promoted_queen.grid(row=0, column=0, padding_x=1, padding_y=1)
 
             promoted_rook = tk.Button  (
                                         promoted, 
@@ -334,7 +334,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage14")
                                     )
-            promoted_rook.grid(row=0, column=1, padx=1, pady=1)
+            promoted_rook.grid(row=0, column=1, padding_x=1, padding_y=1)
 
             promoted_bishop = tk.Button(
                                         promoted, 
@@ -346,7 +346,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage8")
                                     )
-            promoted_bishop.grid(row=0, column=2, padx=1, pady=1)
+            promoted_bishop.grid(row=0, column=2, padding_x=1, padding_y=1)
 
             promoted_knight = tk.Button(
                                         promoted, 
@@ -358,7 +358,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage11")
                                     )
-            promoted_knight.grid(row=0, column=3, padx=1, pady=1)
+            promoted_knight.grid(row=0, column=3, padding_x=1, padding_y=1)
             promoted.mainloop()
 
     # show message box in the screen.
