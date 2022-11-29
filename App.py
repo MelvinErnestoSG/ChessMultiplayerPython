@@ -186,7 +186,7 @@ class App(tk.Frame):
             self.piece_color="black" 
         
         # prevents people from moving their pieces when it's not heir turn.
-        if (self.piece_color=="white" and self.turns%2==0) or (self.piece_color=="black" and self.turns%2==1) or self.buttons_pressed==True:
+        if (self.piece_color=="white" and self.turns%2==0) or (self.piece_color=="black" and self.turns%2==1) or self.buttons_pressed==2:
             # stores square and button of first square selected.
             if self.buttons_pressed==False: 
                 # retrieves position of piece
@@ -195,7 +195,7 @@ class App(tk.Frame):
                 self.buttons_pressed+=1
 
             # stores square and button of second square selected.
-            elif self.buttons_pressed==True: 
+            if self.buttons_pressed==True: 
                 # retrieves position of piece
                 self.sq2=list(self.squares.keys())[list(self.squares.values()).index(button)]
                 self.sq2_button=button
@@ -665,7 +665,7 @@ class App(tk.Frame):
                 if self.sq1_button["image"] in self.black_pieces:
                     # checks to see if the king's current position is a possible move for the piece.
                     if self.allowed_piece_move(): 
-                        speak("invalid move")
+                        self.show_message()
                         return True
 
         if self.piece_color=="black":
@@ -678,7 +678,7 @@ class App(tk.Frame):
                 if self.sq1_button["image"] in self.white_pieces:
                     # checks to see if the king's current position is a possible move for the piece.
                     if self.allowed_piece_move():
-                        speak("invalid move")
+                        self.show_message()
                         return True
 
         return_previous_values()
