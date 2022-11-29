@@ -19,8 +19,8 @@ from threading import Thread
 # help with importing messagebox.
 from tkinter import messagebox
 
-# import dimensions and castling.
-from Const import DIMENSION,SIZE,LEFT,UP,LIGHT,DARK,WHITE
+# importing some constants.
+from Const import DIMENSION,SIZE,CASTLED_WHITE,CASTLED_BLACK,LEFT,UP,LIGHT,DARK,WHITE
 
 # help with importing playsound.
 # pip install playsound 
@@ -460,13 +460,13 @@ class App(tk.Frame):
                 play_sound_capture(self)
                 return True
 
-        # castle movement to white in long shape.
+        # castle movement to white in long form.
             if self.sq1_button["image"]==wk and self.sq2=="c1": 
                 play_sound_move(self)
                 # checks to see if squares in between rook and king 
                 # are empty and are not a possible move for opponent.
                 for x in range(1,4): 
-                    square_button=self.squares[self.ranks[x]+str(1)]
+                    square_button=self.squares[self.ranks[x]+str(CASTLED_WHITE)]
                     if square_button["image"]!="pyimage2":
                         return False
                     self.squares["a1"].config(image="pyimage2")
@@ -482,7 +482,7 @@ class App(tk.Frame):
                 # checks to see if squares in between rook and king 
                 # are empty and are not a possible move for opponent.
                 for x in range(5,7):
-                    square_button=self.squares[self.ranks[x]+str(1)]
+                    square_button=self.squares[self.ranks[x]+str(CASTLED_WHITE)]
                     if square_button["image"]!="pyimage2":
                         return False
                     self.squares["h1"].config(image="pyimage2")
@@ -498,7 +498,7 @@ class App(tk.Frame):
                 # checks to see if squares in between rook and king 
                 # are empty and are not a possible move for opponent.
                 for x in range(1,3):
-                    square_button=self.squares[self.ranks[x]+str(8)]
+                    square_button=self.squares[self.ranks[x]+str(CASTLED_BLACK)]
                     if square_button["image"]!="pyimage2":
                         return False
                     self.squares["a8"].config(image="pyimage2")
@@ -514,7 +514,7 @@ class App(tk.Frame):
                 # checks to see if squares in between rook and king 
                 # are empty and are not a possible move for opponent.
                 for x in range(5,7): 
-                    square_button=self.squares[self.ranks[x]+str(8)]
+                    square_button=self.squares[self.ranks[x]+str(CASTLED_BLACK)]
                     if square_button["image"]!="pyimage2":
                         return False
                     self.squares["h8"].config(image="pyimage2")
