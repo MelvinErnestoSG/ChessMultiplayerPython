@@ -109,72 +109,44 @@ class App(tk.Frame):
         # for castling
         self.castled=False
 
-    # call other functions.
+    # calling all the functions.
     def __call__(self):
         self.set_squares()
-        self.set_alpha_colors()
-        self.set_import_pieces()
+        self.import_pieces()
         self.set_pieces()
         self.mainloop()
 
-    # letters and numbers above the buttons.
-    def set_alpha_colors(self):
-        font_size=7
-        letters=[
-                    [' h ',' g ',' f ',' e ',' d ',' c ',' b ',' a '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    [' a ',' b ',' c ',' d ',' e ',' f ',' g ',' h '],
-                ]
-        for x, rows in enumerate(letters):
-            for y, letters in enumerate(rows):
-                self.label= tk.Label(
-                                        self, 
-                                        text=letters, 
-                                        font=('monospace',font_size,'bold')
-                                    )
+    # fills frame with buttons representing squares.
+    def set_squares(self): 
+        for x in range(DIMENSION):
+            for y in range(DIMENSION):
                 # alternates between dark/light tiles.
                 if x%2==0 and y%2==0: 
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+1, column=y, sticky='ws')
+                    self.square_color=DARK
                 elif x%2==1 and y%2==1:
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+1, column=y, sticky='ws')
+                    self.square_color=DARK
                 else:
-                    self.label.config(foreground=LIGHT, background=DARK)
-                    self.label.grid(row=x+1, column=y, sticky='ws')
+                    self.square_color=LIGHT
 
-        numbers={
-                    '1      8':0, 
-                    '2      7':1, 
-                    '3      6':2, 
-                    '4      5':3, 
-                    '5      4':4, 
-                    '6      3':5, 
-                    '7      2':6, 
-                    '8      1':7,
-                }
-        for x, cols in enumerate(numbers):
-            for y, numbers in enumerate(cols):
-                self.label= tk.Label(
-                                        self, 
-                                        text=numbers, 
-                                        font=('monospace',font_size,'bold')
+                buttons = tk.Button(
+                                        self,  
+                                        bg=self.square_color, 
+                                        bd=False, 
+                                        width=94,
+                                        height=94,
+                                        activebackground=self.square_color,
                                     )
-                # alternates between dark/light tiles.
-                if x%2==0 and y%2==0: 
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+1, column=y, sticky='ne')
-                elif x%2==1 and y%2==1:
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+1, column=y, sticky='ne')
-                else:
-                    self.label.config(foreground=LIGHT, background=DARK)
-                    self.label.grid(row=x+1, column=y, sticky='ne')
+                buttons.grid(row=8-x, column=y)
+                position=self.ranks[y]+str(x+1)
+                self.squares.setdefault(position,buttons) 
+
+                # creates list of square positions.
+                self.squares[position].config(
+                                            command=lambda 
+                                            key=self.squares[position]: 
+                                            self.select_piece(key)
+                                        )
+        self.set_alpha_colors()
 
     # called when a square button is pressed, consists of majority of the movement code.
     def select_piece(self,button): 
@@ -691,40 +663,9 @@ class App(tk.Frame):
             if button["image"]==king:
                 return square
 
-    # fills frame with buttons representing squares.
-    def set_squares(self): 
-        for x in range(DIMENSION):
-            for y in range(DIMENSION):
-                # alternates between dark/light tiles.
-                if x%2==0 and y%2==0: 
-                    self.square_color=DARK
-                elif x%2==1 and y%2==1:
-                    self.square_color=DARK
-                else:
-                    self.square_color=LIGHT
-
-                buttons = tk.Button(
-                                        self,  
-                                        bg=self.square_color, 
-                                        bd=False, 
-                                        width=94,
-                                        height=94,
-                                        activebackground=self.square_color,
-                                    )
-                buttons.grid(row=8-x, column=y)
-                position=self.ranks[y]+str(x+1)
-                self.squares.setdefault(position,buttons) 
-
-                # creates list of square positions.
-                self.squares[position].config(
-                                            command=lambda 
-                                            key=self.squares[position]: 
-                                            self.select_piece(key)
-                                        )
-
     # opens and stores images of pieces and prepares
     # the pieces for the game for both sides.
-    def set_import_pieces(self):
+    def import_pieces(self):
         # stores white pieces images into dicts.
         path=os.path.join(os.path.dirname(__file__),"white") 
         w_dirs=os.listdir(path)
@@ -818,6 +759,65 @@ class App(tk.Frame):
                 position=self.ranks[file]+str(rank)
                 self.squares[position].config(image=self.white_images[starting_piece])
                 self.squares[position].image=self.white_images[starting_piece]
+
+    # letters and numbers above the buttons.
+    def set_alpha_colors(self):
+        font_size=7
+        letters=[
+                    [' h ',' g ',' f ',' e ',' d ',' c ',' b ',' a '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    [' a ',' b ',' c ',' d ',' e ',' f ',' g ',' h '],
+                ]
+        for x, rows in enumerate(letters):
+            for y, letters in enumerate(rows):
+                self.label= tk.Label(
+                                        self, 
+                                        text=letters, 
+                                        font=('monospace',font_size,'bold')
+                                    )
+                # alternates between dark/light tiles.
+                if x%2==0 and y%2==0: 
+                    self.label.config(foreground=DARK, background=LIGHT)
+                    self.label.grid(row=x+1, column=y, sticky='ws')
+                elif x%2==1 and y%2==1:
+                    self.label.config(foreground=DARK, background=LIGHT)
+                    self.label.grid(row=x+1, column=y, sticky='ws')
+                else:
+                    self.label.config(foreground=LIGHT, background=DARK)
+                    self.label.grid(row=x+1, column=y, sticky='ws')
+
+        numbers={
+                    '1      8':0, 
+                    '2      7':1, 
+                    '3      6':2, 
+                    '4      5':3, 
+                    '5      4':4, 
+                    '6      3':5, 
+                    '7      2':6, 
+                    '8      1':7,
+                }
+        for x, cols in enumerate(numbers):
+            for y, numbers in enumerate(cols):
+                self.label= tk.Label(
+                                        self, 
+                                        text=numbers, 
+                                        font=('monospace',font_size,'bold')
+                                    )
+                # alternates between dark/light tiles.
+                if x%2==0 and y%2==0: 
+                    self.label.config(foreground=DARK, background=LIGHT)
+                    self.label.grid(row=x+1, column=y, sticky='ne')
+                elif x%2==1 and y%2==1:
+                    self.label.config(foreground=DARK, background=LIGHT)
+                    self.label.grid(row=x+1, column=y, sticky='ne')
+                else:
+                    self.label.config(foreground=LIGHT, background=DARK)
+                    self.label.grid(row=x+1, column=y, sticky='ne')
 
 # creates main window with the board and creates board object.
 root=tk.Tk()
