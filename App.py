@@ -109,7 +109,7 @@ class App(tk.Frame):
         # for castling
         self.castled=False
 
-    # calling all the functions.
+    # for call some functions.
     def __call__(self):
         self.set_squares()
         self.import_pieces()
@@ -147,6 +147,65 @@ class App(tk.Frame):
                                             self.select_piece(key)
                                         )
         self.set_alpha_colors()
+
+    # letters and numbers above the buttons.
+    def set_alpha_colors(self):
+        font_size=7
+        letters=[
+                    [' h ',' g ',' f ',' e ',' d ',' c ',' b ',' a '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    [' a ',' b ',' c ',' d ',' e ',' f ',' g ',' h '],
+                ]
+        for x, rows in enumerate(letters):
+            for y, letters in enumerate(rows):
+                self.label= tk.Label(
+                                        self, 
+                                        text=letters, 
+                                        font=('monospace',font_size,'bold')
+                                    )
+                # alternates between dark/light tiles.
+                if x%2==0 and y%2==0: 
+                    self.label.config(foreground=DARK, background=LIGHT)
+                    self.label.grid(row=x+1, column=y, sticky='ws')
+                elif x%2==1 and y%2==1:
+                    self.label.config(foreground=DARK, background=LIGHT)
+                    self.label.grid(row=x+1, column=y, sticky='ws')
+                else:
+                    self.label.config(foreground=LIGHT, background=DARK)
+                    self.label.grid(row=x+1, column=y, sticky='ws')
+
+        numbers={
+                    '1      8':0, 
+                    '2      7':1, 
+                    '3      6':2, 
+                    '4      5':3, 
+                    '5      4':4, 
+                    '6      3':5, 
+                    '7      2':6, 
+                    '8      1':7,
+                }
+        for x, cols in enumerate(numbers):
+            for y, numbers in enumerate(cols):
+                self.label= tk.Label(
+                                        self, 
+                                        text=numbers, 
+                                        font=('monospace',font_size,'bold')
+                                    )
+                # alternates between dark/light tiles.
+                if x%2==0 and y%2==0: 
+                    self.label.config(foreground=DARK, background=LIGHT)
+                    self.label.grid(row=x+1, column=y, sticky='ne')
+                elif x%2==1 and y%2==1:
+                    self.label.config(foreground=DARK, background=LIGHT)
+                    self.label.grid(row=x+1, column=y, sticky='ne')
+                else:
+                    self.label.config(foreground=LIGHT, background=DARK)
+                    self.label.grid(row=x+1, column=y, sticky='ne')
 
     # called when a square button is pressed, consists of majority of the movement code.
     def select_piece(self,button): 
@@ -223,7 +282,7 @@ class App(tk.Frame):
         # creates a new menu with buttons depending on pawn color.
         promoted = tk.Tk() 
         promoted.title("Play Chess")
-        promoted.iconbitmap(os.path.join("./icon/ChessPieces.ico"))
+        promoted.iconbitmap("./icon/ChessPieces.ico")
         promoted.geometry("+600+300")
         promoted.config(width=500, height=135, background="#000")
         promoted.resizable(0, 0)
@@ -244,7 +303,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage6")
                                     )
-            promoted_queen.grid(row=0, column=0, padding_x=1, padding_y=1)
+            promoted_queen.grid(row=0, column=0, padx=1, pady=1)
 
             promoted_rook = tk.Button  (
                                         promoted, 
@@ -256,7 +315,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage7")
                                     )
-            promoted_rook.grid(row=0, column=1, padding_x=1, padding_y=1)
+            promoted_rook.grid(row=0, column=1, padx=1, pady=1)
 
             promoted_bishop = tk.Button(
                                         promoted, 
@@ -268,7 +327,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage1")
                                     )
-            promoted_bishop.grid(row=0, column=2, padding_x=1, padding_y=1)
+            promoted_bishop.grid(row=0, column=2, padx=1, pady=1)
 
             promoted_knight = tk.Button(
                                         promoted, 
@@ -280,7 +339,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage4")
                                     ) 
-            promoted_knight.grid(row=0, column=3, padding_x=1, padding_y=1)
+            promoted_knight.grid(row=0, column=3, padx=1, pady=1)
 
         elif color == "black":
             # triggers return piece function when selected.
@@ -294,7 +353,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage13")
                                     )
-            promoted_queen.grid(row=0, column=0, padding_x=1, padding_y=1)
+            promoted_queen.grid(row=0, column=0, padx=1, pady=1)
 
             promoted_rook = tk.Button  (
                                         promoted, 
@@ -306,7 +365,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage14")
                                     )
-            promoted_rook.grid(row=0, column=1, padding_x=1, padding_y=1)
+            promoted_rook.grid(row=0, column=1, padx=1, pady=1)
 
             promoted_bishop = tk.Button(
                                         promoted, 
@@ -318,7 +377,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage8")
                                     )
-            promoted_bishop.grid(row=0, column=2, padding_x=1, padding_y=1)
+            promoted_bishop.grid(row=0, column=2, padx=1, pady=1)
 
             promoted_knight = tk.Button(
                                         promoted, 
@@ -330,7 +389,7 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage11")
                                     )
-            promoted_knight.grid(row=0, column=3, padding_x=1, padding_y=1)
+            promoted_knight.grid(row=0, column=3, padx=1, pady=1)
             promoted.mainloop()
 
     # show message box in the screen.
@@ -760,64 +819,7 @@ class App(tk.Frame):
                 self.squares[position].config(image=self.white_images[starting_piece])
                 self.squares[position].image=self.white_images[starting_piece]
 
-    # letters and numbers above the buttons.
-    def set_alpha_colors(self):
-        font_size=7
-        letters=[
-                    [' h ',' g ',' f ',' e ',' d ',' c ',' b ',' a '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    [' a ',' b ',' c ',' d ',' e ',' f ',' g ',' h '],
-                ]
-        for x, rows in enumerate(letters):
-            for y, letters in enumerate(rows):
-                self.label= tk.Label(
-                                        self, 
-                                        text=letters, 
-                                        font=('monospace',font_size,'bold')
-                                    )
-                # alternates between dark/light tiles.
-                if x%2==0 and y%2==0: 
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+1, column=y, sticky='ws')
-                elif x%2==1 and y%2==1:
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+1, column=y, sticky='ws')
-                else:
-                    self.label.config(foreground=LIGHT, background=DARK)
-                    self.label.grid(row=x+1, column=y, sticky='ws')
-
-        numbers={
-                    '1      8':0, 
-                    '2      7':1, 
-                    '3      6':2, 
-                    '4      5':3, 
-                    '5      4':4, 
-                    '6      3':5, 
-                    '7      2':6, 
-                    '8      1':7,
-                }
-        for x, cols in enumerate(numbers):
-            for y, numbers in enumerate(cols):
-                self.label= tk.Label(
-                                        self, 
-                                        text=numbers, 
-                                        font=('monospace',font_size,'bold')
-                                    )
-                # alternates between dark/light tiles.
-                if x%2==0 and y%2==0: 
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+1, column=y, sticky='ne')
-                elif x%2==1 and y%2==1:
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+1, column=y, sticky='ne')
-                else:
-                    self.label.config(foreground=LIGHT, background=DARK)
-                    self.label.grid(row=x+1, column=y, sticky='ne')
+    
 
 # creates main window with the board and creates board object.
 root=tk.Tk()
