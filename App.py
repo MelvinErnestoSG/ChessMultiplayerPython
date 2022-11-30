@@ -43,20 +43,6 @@ def move_sound():
 # sound when is moved pieces.
 def capture_sound(): 
     playsound('capture.wav')
-#--------------------------------------#
-# call sound when is moved pieces.
-def play_sound_move(moved=False):
-    if moved:
-        move_sound()
-    else:
-        capture_sound()
-#--------------------------------------#
-# call sound when is captured pieces.
-def play_sound_capture(captured=False):
-    if captured:
-        capture_sound()
-    else:
-        move_sound()
 
 class App(tk.Frame):
     def __init__(self, parent, height, width): 
@@ -116,97 +102,6 @@ class App(tk.Frame):
         self.set_pieces()
         self.mainloop()
 
-    # fills frame with buttons representing squares.
-    def set_squares(self): 
-        for x in range(DIMENSION):
-            for y in range(DIMENSION):
-                # alternates between dark/light tiles.
-                if x%2==0 and y%2==0: 
-                    self.square_color=DARK
-                elif x%2==1 and y%2==1:
-                    self.square_color=DARK
-                else:
-                    self.square_color=LIGHT
-
-                buttons = tk.Button(
-                                        self,  
-                                        bg=self.square_color, 
-                                        bd=False, 
-                                        width=94,
-                                        height=94,
-                                        activebackground=self.square_color,
-                                    )
-                buttons.grid(row=8-x, column=y)
-                position=self.ranks[y]+str(x+1)
-                self.squares.setdefault(position,buttons) 
-
-                # creates list of square positions.
-                self.squares[position].config(
-                                            command=lambda 
-                                            key=self.squares[position]: 
-                                            self.select_piece(key)
-                                        )
-        self.set_alpha_colors()
-
-    # letters and numbers above the buttons.
-    def set_alpha_colors(self):
-        font_size=7
-        letters=[
-                    [' h ',' g ',' f ',' e ',' d ',' c ',' b ',' a '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    [' a ',' b ',' c ',' d ',' e ',' f ',' g ',' h '],
-                ]
-        for x, rows in enumerate(letters):
-            for y, letters in enumerate(rows):
-                self.label= tk.Label(
-                                        self, 
-                                        text=letters, 
-                                        font=('monospace',font_size,'bold')
-                                    )
-                # alternates between dark/light tiles.
-                if x%2==0 and y%2==0: 
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+1, column=y, sticky='ws')
-                elif x%2==1 and y%2==1:
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+1, column=y, sticky='ws')
-                else:
-                    self.label.config(foreground=LIGHT, background=DARK)
-                    self.label.grid(row=x+1, column=y, sticky='ws')
-
-        numbers={
-                    '1      8':0, 
-                    '2      7':1, 
-                    '3      6':2, 
-                    '4      5':3, 
-                    '5      4':4, 
-                    '6      3':5, 
-                    '7      2':6, 
-                    '8      1':7,
-                }
-        for x, cols in enumerate(numbers):
-            for y, numbers in enumerate(cols):
-                self.label= tk.Label(
-                                        self, 
-                                        text=numbers, 
-                                        font=('monospace',font_size,'bold')
-                                    )
-                # alternates between dark/light tiles.
-                if x%2==0 and y%2==0: 
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+1, column=y, sticky='ne')
-                elif x%2==1 and y%2==1:
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+1, column=y, sticky='ne')
-                else:
-                    self.label.config(foreground=LIGHT, background=DARK)
-                    self.label.grid(row=x+1, column=y, sticky='ne')
-
     # called when a square button is pressed, consists of majority of the movement code.
     def select_piece(self,button): 
         #checks color of first piece
@@ -217,7 +112,7 @@ class App(tk.Frame):
             self.piece_color="black" 
         
         # prevents people from moving their pieces when it's not heir turn.
-        if (self.piece_color=="white" and self.turns%2==0) or (self.piece_color=="black" and self.turns%2==1) or self.buttons_pressed==2:
+        if (self.piece_color=="white" and self.turns%2==0) or (self.piece_color=="black" and self.turns%2==1) or self.buttons_pressed==True:
             # stores square and button of first square selected.
             if self.buttons_pressed==False: 
                 # retrieves position of piece
@@ -226,7 +121,7 @@ class App(tk.Frame):
                 self.buttons_pressed+=1
 
             # stores square and button of second square selected.
-            if self.buttons_pressed==True: 
+            elif self.buttons_pressed==True: 
                 # retrieves position of piece
                 self.sq2=list(self.squares.keys())[list(self.squares.values()).index(button)]
                 self.sq2_button=button
@@ -234,7 +129,7 @@ class App(tk.Frame):
                 
                 # prevents self destruction and allows the user to choose a new piece.
                 if self.sq2==self.sq1:
-                    self.buttons_pressed=True
+                    self.buttons_pressed=False
                     return
 
                 # makes sure the move is legal.
@@ -269,7 +164,7 @@ class App(tk.Frame):
                         if (button["image"]=="pyimage5" and previous_sq2.count("8")==1) or (button["image"]=="pyimage12" and previous_sq2.count("1")==1):
                             self.promotion_menu(self.piece_color)
         else:
-            self.buttons_pressed=True
+            return
 
     # creates menu to choose what piece to change the pawn to.
     def promotion_menu(self,color): 
@@ -446,7 +341,7 @@ class App(tk.Frame):
                         if square_on_path!="pyimage2":
                             return False
 
-                if x1>x2:# NW direction.
+                elif x1>x2:# NW direction.
                     for x in range(x1-1,x2,-1):
                         y1+=1
                         square_on_path=self.squares[self.ranks[x]+str(y1)].cget("image")
@@ -483,17 +378,14 @@ class App(tk.Frame):
         if self.sq1_button["image"]==wk or self.sq1_button["image"]==bk:
             # allows 1 square when move.
             if (abs(int(self.sq1[1])-int(self.sq2[1]))<2) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])))<2 and self.sq2_button["image"]=="pyimage2":
-                play_sound_move(self)
                 return True
 
             # allows 1 square when capture.
             if (abs(int(self.sq1[1])-int(self.sq2[1]))<2) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])))<2 and self.sq2_button["image"]!="pyimage2":
-                play_sound_capture(self)
                 return True
 
         # castle movement to white in long form.
             if self.sq1_button["image"]==wk and self.sq2=="c1": 
-                play_sound_move(self)
                 # checks to see if squares in between rook and king 
                 # are empty and are not a possible move for opponent.
                 for x in range(1,4): 
@@ -509,7 +401,6 @@ class App(tk.Frame):
 
         # castle movement to white in short form.
             if self.sq1_button["image"]==wk and self.sq2=="g1":
-                play_sound_move(self)
                 # checks to see if squares in between rook and king 
                 # are empty and are not a possible move for opponent.
                 for x in range(5,7):
@@ -525,7 +416,6 @@ class App(tk.Frame):
 
         # castle movement to black in long form.
             if self.sq1_button["image"]==bk and self.sq2=="c8":
-                play_sound_move(self)
                 # checks to see if squares in between rook and king 
                 # are empty and are not a possible move for opponent.
                 for x in range(1,3):
@@ -541,7 +431,6 @@ class App(tk.Frame):
 
         # castle movement to black in short form.
             if self.sq1_button["image"]==bk and self.sq2=="g8":
-                play_sound_move(self)
                 # checks to see if squares in between rook and king 
                 # are empty and are not a possible move for opponent.
                 for x in range(5,7): 
@@ -560,22 +449,20 @@ class App(tk.Frame):
             # makes sure there is equal change between file and rank movement.
             # allows the moving of pieces as rook.
             if int(self.sq1[1])==int(self.sq2[1]) and self.sq2_button["image"]=="pyimage2" or self.sq1[0]==self.sq2[0] and self.sq2_button["image"]=="pyimage2": 
-                play_sound_move(self)
                 return True
 
             # allows the capturing of pieces as rook.
             if int(self.sq1[1])==int(self.sq2[1]) and self.sq2_button["image"]!="pyimage2" or self.sq1[0]==self.sq2[0] and self.sq2_button["image"]!="pyimage2": 
-                play_sound_capture(self)
+                capture_sound()
                 return True
 
             # allows the moving of pieces as bishop.
             if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
-                play_sound_move(self)
                 return True
 
             # allows the capturing of pieces as bishop.
-            if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])):
-                play_sound_capture(self)
+            if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]!="pyimage2":
+                capture_sound()
                 return True
 
         # bishop movement.     
@@ -583,34 +470,31 @@ class App(tk.Frame):
             # makes sure there is equal change between file and rank movement.
             # allows the moving of pieces as bishop.
             if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2": 
-                play_sound_move(self)
                 return True
 
             # allows the capturing of pieces as bishop.
-            if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])): 
-                play_sound_capture(self)
+            if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]!="pyimage2": 
+                capture_sound()
                 return True
 
         # knight movement.
         if self.sq1_button["image"]==wn or self.sq1_button["image"]==bn:
             # allows tall L moves if there is not an opponent piece there.
-            if (abs(int(self.sq1[1])-int(self.sq2[1]))==2) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1) and self.sq2_button["image"]=="pyimage2":
-                play_sound_move(self)
+            if (abs(int(self.sq1[1])-int(self.sq2[1]))==2) and self.sq2_button["image"]=="pyimage2" and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1) and self.sq2_button["image"]=="pyimage2":
                 return True
 
             # allows tall L moves if there is an opponent piece there can make the capture.
-            if (abs(int(self.sq1[1])-int(self.sq2[1]))==2) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1) and self.sq2_button["image"]!="pyimage2":
-                play_sound_capture(self)
+            if (abs(int(self.sq1[1])-int(self.sq2[1]))==2) and self.sq2_button["image"]!="pyimage2" and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1) and self.sq2_button["image"]!="pyimage2":
+                capture_sound()
                 return True
 
             # allows wide L moves if there is not an opponent piece there.
-            if (abs(int(self.sq1[1])-int(self.sq2[1]))==1) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==2) and self.sq2_button["image"]=="pyimage2": 
-                play_sound_move(self)
+            if (abs(int(self.sq1[1])-int(self.sq2[1]))==1) and self.sq2_button["image"]=="pyimage2" and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==2) and self.sq2_button["image"]=="pyimage2": 
                 return True
 
             # allows wide L moves if there is not an opponent piece there can make the capture.
-            if (abs(int(self.sq1[1])-int(self.sq2[1]))==1) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==2) and self.sq2_button["image"]!="pyimage2": 
-                play_sound_capture(self)
+            if (abs(int(self.sq1[1])-int(self.sq2[1]))==1) and self.sq2_button["image"]!="pyimage2" and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==2) and self.sq2_button["image"]!="pyimage2": 
+                capture_sound()
                 return True
 
         # rook movement.
@@ -618,12 +502,11 @@ class App(tk.Frame):
             # only allows movement within same rank or file.
             # allows the moving of pieces as rook.
             if int(self.sq1[1])==int(self.sq2[1]) and self.sq2_button["image"]=="pyimage2" or self.sq1[0]==self.sq2[0] and self.sq2_button["image"]=="pyimage2":
-                play_sound_move(self)
                 return True
             
             # allows the capturing of pieces as rook.
-            if int(self.sq1[1])==int(self.sq2[1]) and self.sq2_button["image"]!="pyimage2" or self.sq1[0]==self.sq2[0] and self.sq2_button["image"]!="pyimage2":
-                play_sound_capture(self)
+            elif int(self.sq1[1])==int(self.sq2[1]) and self.sq2_button["image"]!="pyimage2" or self.sq1[0]==self.sq2[0] and self.sq2_button["image"]!="pyimage2":
+                capture_sound()
                 return True
 
         # white pawn movement.
@@ -635,17 +518,15 @@ class App(tk.Frame):
                     # makes sure that there is no piece blocking path.
                     in_front=self.squares[self.sq1[0]+str(int(self.sq1[1])+1)]
                     if in_front["image"]=="pyimage2": 
-                        play_sound_move(self)
                         return True
 
             # allows 1 sq movement.           
             if int(self.sq1[1])+1==int(self.sq2[1]) and self.sq1[0]==self.sq2[0] and self.sq2_button["image"]=="pyimage2":
-                play_sound_move(self)
                 return True
 
             # allows the capturing of diagonal pieces if there is an opponent piece there.
             if int(self.sq1[1])+1==int(self.sq2[1]) and abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1 and self.sq2_button["image"]!="pyimage2":
-                play_sound_capture(self)
+                capture_sound()
                 return True
 
         # black pawn movement.
@@ -654,20 +535,15 @@ class App(tk.Frame):
             if "7" in self.sq1: 
                 # only allows it to move straight 1 or 2 sql.
                 if int(self.sq1[1])==int(self.sq2[1])+1 or int(self.sq1[1])==int(self.sq2[1])+2 and self.sq1[0]==self.sq2[0] and self.sq2_button["image"]=="pyimage2":
-                    # makes sure that there is no piece blocking path.
-                    in_front=self.squares[self.sq1[0]+str(int(self.sq1[1])+1)]
-                    if in_front["image"]!="pyimage2": 
-                        play_sound_move(self)
-                        return True
+                    return True
             
             # allows 1 sq movement.
             if int(self.sq1[1])==int(self.sq2[1])+1 and self.sq1[0]==self.sq2[0] and self.sq2_button["image"]=="pyimage2":
-                play_sound_move(self)
                 return True
 
             # allows the capturing of diagonal pieces if there is an opponent piece there.
             if int(self.sq1[1])==int(self.sq2[1])+1 and abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1 and self.sq2_button["image"]!="pyimage2":
-                play_sound_capture(self)
+                capture_sound()
                 return True
 
     # prevents a move if king is under attack.
@@ -720,7 +596,99 @@ class App(tk.Frame):
         for square in self.squares:
             button=self.squares[square]
             if button["image"]==king:
+                move_sound()
                 return square
+
+    # fills frame with buttons representing squares.
+    def set_squares(self): 
+        for x in range(DIMENSION):
+            for y in range(DIMENSION):
+                # alternates between dark/light tiles.
+                if x%2==0 and y%2==0: 
+                    self.square_color=DARK
+                elif x%2==1 and y%2==1:
+                    self.square_color=DARK
+                else:
+                    self.square_color=LIGHT
+
+                buttons = tk.Button(
+                                        self,  
+                                        bg=self.square_color, 
+                                        bd=False, 
+                                        width=94,
+                                        height=94,
+                                        activebackground=self.square_color,
+                                    )
+                buttons.grid(row=8-x, column=y)
+                position=self.ranks[y]+str(x+1)
+                self.squares.setdefault(position,buttons) 
+
+                # creates list of square positions.
+                self.squares[position].config(
+                                            command=lambda 
+                                            key=self.squares[position]: 
+                                            self.select_piece(key)
+                                        )
+        self.set_alpha_colors()
+
+    # letters and numbers above the buttons.
+    def set_alpha_colors(self):
+        font_size=7
+        letters=[
+                    [' h ',' g ',' f ',' e ',' d ',' c ',' b ',' a '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    ['   ','   ','   ','   ','   ','   ','   ','   '],
+                    [' a ',' b ',' c ',' d ',' e ',' f ',' g ',' h '],
+                ]
+        for x, rows in enumerate(letters):
+            for y, letters in enumerate(rows):
+                self.label= tk.Label(
+                                        self, 
+                                        text=letters, 
+                                        font=('monospace',font_size,'bold')
+                                    )
+                # alternates between dark/light tiles.
+                if x%2==0 and y%2==0: 
+                    self.label.config(foreground=DARK, background=LIGHT)
+                    self.label.grid(row=x+1, column=y, sticky='ws')
+                elif x%2==1 and y%2==1:
+                    self.label.config(foreground=DARK, background=LIGHT)
+                    self.label.grid(row=x+1, column=y, sticky='ws')
+                else:
+                    self.label.config(foreground=LIGHT, background=DARK)
+                    self.label.grid(row=x+1, column=y, sticky='ws')
+
+        numbers={
+                    '1      8':0, 
+                    '2      7':1, 
+                    '3      6':2, 
+                    '4      5':3, 
+                    '5      4':4, 
+                    '6      3':5, 
+                    '7      2':6, 
+                    '8      1':7,
+                }
+        for x, cols in enumerate(numbers):
+            for y, numbers in enumerate(cols):
+                self.label= tk.Label(
+                                        self, 
+                                        text=numbers, 
+                                        font=('monospace',font_size,'bold')
+                                    )
+                # alternates between dark/light tiles.
+                if x%2==0 and y%2==0: 
+                    self.label.config(foreground=DARK, background=LIGHT)
+                    self.label.grid(row=x+1, column=y, sticky='ne')
+                elif x%2==1 and y%2==1:
+                    self.label.config(foreground=DARK, background=LIGHT)
+                    self.label.grid(row=x+1, column=y, sticky='ne')
+                else:
+                    self.label.config(foreground=LIGHT, background=DARK)
+                    self.label.grid(row=x+1, column=y, sticky='ne')
 
     # opens and stores images of pieces and prepares
     # the pieces for the game for both sides.
@@ -818,9 +786,7 @@ class App(tk.Frame):
                 position=self.ranks[file]+str(rank)
                 self.squares[position].config(image=self.white_images[starting_piece])
                 self.squares[position].image=self.white_images[starting_piece]
-
-    
-
+                
 # creates main window with the board and creates board object.
 root=tk.Tk()
 root=App(root,DIMENSION,DIMENSION)
