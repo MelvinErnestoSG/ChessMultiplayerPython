@@ -280,32 +280,32 @@ class App(tk.Frame):
             promoted.destroy()
 
         # creates a new menu with buttons depending on pawn color.
-        promoted = tk.Tk() 
+        promoted=tk.Tk() 
         promoted.title("Play Chess")
         promoted.iconbitmap("./icon/ChessPieces.ico")
         promoted.geometry("+600+300")
-        promoted.config(width=500, height=135, background="#000")
+        promoted.config(width=500,height=135,background="#000")
         promoted.resizable(0, 0)
 
         #https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
-        #white_figures = { 'king': '♔', 'queen': '♕', 'rook': '♖', 'bishop': '♗', 'knight': '♘', 'pawn': '♙'}
-        #black_figures = { 'king': '♚', 'queen': '♛', 'rook': '♜', 'bishop': '♝', 'knight': '♞', 'pawn': '♟'}
+        #white_figures={'king':'♔','queen':'♕','rook':'♖','bishop':'♗','knight':'♘','pawn':'♙'}
+        #black_figures={'king':'♚','queen':'♛','rook':'♜','bishop':'♝','knight':'♞','pawn':'♟'}
 
-        if color == "white":
+        if color=="white":
             # triggers return_piece function when selected.
-            promoted_queen = tk.Button (
-                                        promoted, 
-                                        text="♕",
-                                        font=("monospace",45,"bold"),
-                                        bg=DARK,
-                                        fg="#fff",
-                                        activebackground="lawn green",
-                                        command=lambda: 
-                                        return_piece("pyimage6")
-                                    )
-            promoted_queen.grid(row=0, column=0, padx=1, pady=1)
+            promoted_queen=tk.Button    (
+                                            promoted, 
+                                            text="♕",
+                                            font=("monospace",45,"bold"),
+                                            bg=DARK,
+                                            fg="#fff",
+                                            activebackground="lawn green",
+                                            command=lambda: 
+                                            return_piece("pyimage6")
+                                        )
+            promoted_queen.grid(row=0,column=0,padx=1,pady=1)
 
-            promoted_rook = tk.Button  (
+            promoted_rook=tk.Button (
                                         promoted, 
                                         text="♖", 
                                         font=("monospace",45,"bold"),
@@ -315,86 +315,86 @@ class App(tk.Frame):
                                         command=lambda: 
                                         return_piece("pyimage7")
                                     )
-            promoted_rook.grid(row=0, column=1, padx=1, pady=1)
+            promoted_rook.grid(row=0,column=1,padx=1,pady=1)
 
-            promoted_bishop = tk.Button(
-                                        promoted, 
-                                        text="♗", 
-                                        font=("monospace",45,"bold"),
-                                        bg=DARK,
-                                        fg="#fff",
-                                        activebackground="lawn green",
-                                        command=lambda: 
-                                        return_piece("pyimage1")
-                                    )
-            promoted_bishop.grid(row=0, column=2, padx=1, pady=1)
+            promoted_bishop=tk.Button   (
+                                            promoted, 
+                                            text="♗", 
+                                            font=("monospace",45,"bold"),
+                                            bg=DARK,
+                                            fg="#fff",
+                                            activebackground="lawn green",
+                                            command=lambda: 
+                                            return_piece("pyimage1")
+                                        )
+            promoted_bishop.grid(row=0,column=2,padx=1,pady=1)
 
-            promoted_knight = tk.Button(
-                                        promoted, 
-                                        text="♘", 
-                                        font=("monospace",45,"bold"),
-                                        bg=DARK,
-                                        fg="#fff",
-                                        activebackground="lawn green",
-                                        command=lambda: 
-                                        return_piece("pyimage4")
-                                    ) 
-            promoted_knight.grid(row=0, column=3, padx=1, pady=1)
+            promoted_knight=tk.Button   (
+                                            promoted, 
+                                            text="♘", 
+                                            font=("monospace",45,"bold"),
+                                            bg=DARK,
+                                            fg="#fff",
+                                            activebackground="lawn green",
+                                            command=lambda: 
+                                            return_piece("pyimage4")
+                                        ) 
+            promoted_knight.grid(row=0,column=3,padx=1,pady=1)
 
-        elif color == "black":
+        elif color=="black":
             # triggers return piece function when selected.
-            promoted_queen = tk.Button(
-                                        promoted, 
-                                        text="♛", 
-                                        font=("monospace",45,"bold"),
-                                        bg=LIGHT,
-                                        fg="#000",
-                                        activebackground="lawn green",
-                                        command=lambda: 
-                                        return_piece("pyimage13")
-                                    )
-            promoted_queen.grid(row=0, column=0, padx=1, pady=1)
+            promoted_queen=tk.Button    (
+                                            promoted, 
+                                            text="♛", 
+                                            font=("monospace",45,"bold"),
+                                            bg=LIGHT,
+                                            fg="#000",
+                                            activebackground="lawn green",
+                                            command=lambda: 
+                                            return_piece("pyimage13")
+                                        )
+            promoted_queen.grid(row=0,column=0,padx=1,pady=1)
 
-            promoted_rook = tk.Button  (
-                                        promoted, 
-                                        text="♜", 
-                                        font=("monospace",45,"bold"),
-                                        bg=LIGHT,
-                                        fg="#000",
-                                        activebackground="lawn green",
-                                        command=lambda: 
-                                        return_piece("pyimage14")
-                                    )
-            promoted_rook.grid(row=0, column=1, padx=1, pady=1)
+            promoted_rook=tk.Button     (
+                                            promoted, 
+                                            text="♜", 
+                                            font=("monospace",45,"bold"),
+                                            bg=LIGHT,
+                                            fg="#000",
+                                            activebackground="lawn green",
+                                            command=lambda: 
+                                            return_piece("pyimage14")
+                                        )
+            promoted_rook.grid(row=0,column=1,padx=1,pady=1)
 
-            promoted_bishop = tk.Button(
-                                        promoted, 
-                                        text="♝", 
-                                        font=("monospace",45,"bold"),
-                                        bg=LIGHT,
-                                        fg="#000",
-                                        activebackground="lawn green",
-                                        command=lambda: 
-                                        return_piece("pyimage8")
-                                    )
-            promoted_bishop.grid(row=0, column=2, padx=1, pady=1)
+            promoted_bishop=tk.Button   (
+                                            promoted, 
+                                            text="♝", 
+                                            font=("monospace",45,"bold"),
+                                            bg=LIGHT,
+                                            fg="#000",
+                                            activebackground="lawn green",
+                                            command=lambda: 
+                                            return_piece("pyimage8")
+                                        )
+            promoted_bishop.grid(row=0,column=2,padx=1,pady=1)
 
-            promoted_knight = tk.Button(
-                                        promoted, 
-                                        text="♞", 
-                                        font=("monospace",45,"bold"),
-                                        bg=LIGHT,
-                                        fg="#000",
-                                        activebackground="lawn green",
-                                        command=lambda: 
-                                        return_piece("pyimage11")
-                                    )
-            promoted_knight.grid(row=0, column=3, padx=1, pady=1)
+            promoted_knight=tk.Button   (
+                                            promoted, 
+                                            text="♞", 
+                                            font=("monospace",45,"bold"),
+                                            bg=LIGHT,
+                                            fg="#000",
+                                            activebackground="lawn green",
+                                            command=lambda: 
+                                            return_piece("pyimage11")
+                                        )
+            promoted_knight.grid(row=0,column=3,padx=1,pady=1)
             promoted.mainloop()
 
     # show message box in the screen.
     def show_message(self):
-        messagebox.showerror('Error', 'Something went wrong with your movement!')
+        messagebox.showerror('Error','Something went wrong with your movement!')
 
     # prevents capturing your own pieces.    
     def friendly_fire(self): 
