@@ -609,7 +609,7 @@ class App(tk.Frame):
                                         bd=False, 
                                         width=94,
                                         height=94,
-                                        activebackground=self.square_color,
+                                        activebackground='lawn green',
                                     )
                 buttons.grid(row=8-x, column=y)
                 position=self.ranks[y]+str(x+1)
@@ -626,6 +626,7 @@ class App(tk.Frame):
     # letters and numbers above the buttons.
     def set_alpha_colors(self):
         font_size=7
+        # letters above the buttons.
         letters=[
                     [' a ',' b ',' c ',' d ',' e ',' f ',' g ',' h ']
                 ]
@@ -638,15 +639,16 @@ class App(tk.Frame):
                                     )
                 # alternates between dark/light tiles.
                 if x%2==0 and y%2==0: 
-                    self.label.config(foreground=LIGHT, background=DARK)
-                    self.label.grid(row=x+8, column=y, sticky='ws')
+                    self.label.config(foreground=LIGHT,background=DARK)
+                    self.label.grid(row=x+8,column=y,sticky='ws')
                 elif x%2==1 and y%2==1:
-                    self.label.config(foreground=LIGHT, background=DARK)
-                    self.label.grid(row=x+8, column=y, sticky='ws')
+                    self.label.config(foreground=LIGHT,background=DARK)
+                    self.label.grid(row=x+8,column=y,sticky='ws')
                 else:
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+8, column=y, sticky='ws')
+                    self.label.config(foreground=DARK,background=LIGHT)
+                    self.label.grid(row=x+8,column=y,sticky='ws')
 
+        # numbers above the buttons.
         numbers={
                     '1':'0', 
                     '2':'1', 
@@ -666,14 +668,14 @@ class App(tk.Frame):
                                     )
                 # alternates between dark/light tiles.
                 if x%2==0 and y%2==0: 
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+1, column=y, sticky='ne')
+                    self.label.config(foreground=DARK,background=LIGHT)
+                    self.label.grid(row=x+1,column=y,sticky='ne')
                 elif x%2==1 and y%2==1:
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+1, column=y, sticky='ne')
+                    self.label.config(foreground=DARK,background=LIGHT)
+                    self.label.grid(row=x+1,column=y,sticky='ne')
                 else:
-                    self.label.config(foreground=LIGHT, background=DARK)
-                    self.label.grid(row=x+1, column=y, sticky='ne')
+                    self.label.config(foreground=LIGHT,background=DARK)
+                    self.label.grid(row=x+1,column=y,sticky='ne')
 
     # opens and stores images of pieces and prepares
     # the pieces for the game for both sides.
@@ -699,68 +701,68 @@ class App(tk.Frame):
     # places pieces in starting positions.
     def set_pieces(self): 
         # assigning positions with their default pieces.
-        dict_rank1_pieces = {
-                                "a1":"r.png", 
-                                "b1":"n.png", 
-                                "c1":"b.png", 
-                                "d1":"q.png", 
-                                "e1":"k.png", 
-                                "f1":"b.png", 
-                                "g1":"n.png", 
-                                "h1":"r.png",
-                            }
+        rank1_pieces={
+                        "a1":"r.png", 
+                        "b1":"n.png", 
+                        "c1":"b.png", 
+                        "d1":"q.png", 
+                        "e1":"k.png", 
+                        "f1":"b.png", 
+                        "g1":"n.png", 
+                        "h1":"r.png",
+                    }
 
-        dict_rank2_pieces = {
-                                "a2":"p.png", 
-                                "b2":"p.png", 
-                                "c2":"p.png", 
-                                "d2":"p.png", 
-                                "e2":"p.png", 
-                                "f2":"p.png", 
-                                "g2":"p.png", 
-                                "h2":"p.png",
-                            }    
+        rank2_pieces={
+                        "a2":"p.png", 
+                        "b2":"p.png", 
+                        "c2":"p.png", 
+                        "d2":"p.png", 
+                        "e2":"p.png", 
+                        "f2":"p.png", 
+                        "g2":"p.png", 
+                        "h2":"p.png",
+                    }    
 
-        dict_rank7_pieces = {
-                                "a7":"p.png", 
-                                "b7":"p.png", 
-                                "c7":"p.png", 
-                                "d7":"p.png", 
-                                "e7":"p.png", 
-                                "f7":"p.png", 
-                                "g7":"p.png", 
-                                "h7":"p.png",
-                            }
+        rank7_pieces={
+                        "a7":"p.png", 
+                        "b7":"p.png", 
+                        "c7":"p.png", 
+                        "d7":"p.png", 
+                        "e7":"p.png", 
+                        "f7":"p.png", 
+                        "g7":"p.png", 
+                        "h7":"p.png",
+                    }
 
-        dict_rank8_pieces = {
-                                "a8":"r.png", 
-                                "b8":"n.png", 
-                                "c8":"b.png", 
-                                "d8":"q.png", 
-                                "e8":"k.png", 
-                                "f8":"b.png", 
-                                "g8":"n.png", 
-                                "h8":"r.png",
-                            }
+        rank8_pieces={
+                        "a8":"r.png", 
+                        "b8":"n.png", 
+                        "c8":"b.png", 
+                        "d8":"q.png", 
+                        "e8":"k.png", 
+                        "f8":"b.png", 
+                        "g8":"n.png", 
+                        "h8":"r.png",
+                    }
 
         # inserts images into buttons.
-        for key in dict_rank1_pieces:
-            starting_piece=dict_rank1_pieces[key]
+        for key in rank1_pieces:
+            starting_piece=rank1_pieces[key]
             self.squares[key].config(image=self.white_images[starting_piece])
             self.squares[key].image=self.white_images[starting_piece]
             
-        for key in dict_rank2_pieces:
-            starting_piece=dict_rank2_pieces[key]
+        for key in rank2_pieces:
+            starting_piece=rank2_pieces[key]
             self.squares[key].config(image=self.white_images[starting_piece])
             self.squares[key].image=self.white_images[starting_piece]
 
-        for key in dict_rank7_pieces:
-            starting_piece=dict_rank7_pieces[key]
+        for key in rank7_pieces:
+            starting_piece=rank7_pieces[key]
             self.squares[key].config(image=self.black_images[starting_piece])
             self.squares[key].image=self.black_images[starting_piece]
             
-        for key in dict_rank8_pieces:
-            starting_piece=dict_rank8_pieces[key]
+        for key in rank8_pieces:
+            starting_piece=rank8_pieces[key]
             self.squares[key].config(image=self.black_images[starting_piece])
             self.squares[key].image=self.black_images[starting_piece]
 
