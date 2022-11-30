@@ -1,7 +1,7 @@
 import tkinter as tk
 
 # for a string to store alphabet.
-import string as st
+import string
 
 # help with importing images.
 import os
@@ -36,11 +36,7 @@ def speak(audio):
     engine.runAndWait()
 Thread(target=speak("welcome!")).start()
 #--------------------------------------#
-# sound when are moved pieces.
-def move_sound(): 
-    playsound('move.wav')
-#--------------------------------------#
-# sound when is moved pieces.
+# sound when are captured pieces.
 def capture_sound(): 
     playsound('capture.wav')
 
@@ -65,7 +61,7 @@ class App(tk.Frame):
         # stores squares with pos as key and button as value.
         self.square_color=None
         self.squares={} 
-        self.ranks=st.ascii_lowercase
+        self.ranks=string.ascii_lowercase
 
         # stores images of pieces.
         self.white_images={} 
@@ -104,26 +100,24 @@ class App(tk.Frame):
 
     # called when a square button is pressed, consists of majority of the movement code.
     def select_piece(self,button): 
-        #checks color of first piece
-        if button["image"] in self.white_pieces and self.buttons_pressed==False: 
+        if button["image"] in self.white_pieces and self.buttons_pressed==False: #checks color of first piece
             self.piece_color="white"
-        
         elif button["image"] in self.black_pieces and self.buttons_pressed==False:
             self.piece_color="black" 
-        
-        # prevents people from moving their pieces when it's not heir turn.
+
+        #prevents people from moving their pieces when it's not their turn.
         if (self.piece_color=="white" and self.turns%2==0) or (self.piece_color=="black" and self.turns%2==1) or self.buttons_pressed==True:
             # stores square and button of first square selected.
             if self.buttons_pressed==False: 
-                # retrieves position of piece
                 self.sq1=list(self.squares.keys())[list(self.squares.values()).index(button)] 
+                # retrieves position of piece.
                 self.sq1_button=button
                 self.buttons_pressed+=1
 
-            # stores square and button of second square selected.
+            # stores square and button of second square selected.    
             elif self.buttons_pressed==True: 
-                # retrieves position of piece
                 self.sq2=list(self.squares.keys())[list(self.squares.values()).index(button)]
+                # retrieves position of piece.
                 self.sq2_button=button
                 self.buttons_pressed-=1
                 
@@ -151,8 +145,7 @@ class App(tk.Frame):
                     # for some reason it says king is in check after a castle - 
                     # so I set up a variable here that would prevent this code from running.
                     if self.in_check()==True and self.castled==False:
-                        # reverts movement since king is 
-                        # or would be put into check because of move.
+                        # reverts movement since king is or would be put into check because of move.
                         self.squares[previous_sq2].config(image=previous_sq2_button_piece) 
                         self.squares[previous_sq2].image=previous_sq2_button_piece
                         
@@ -163,6 +156,7 @@ class App(tk.Frame):
                         # checks for possible pawn promotion.                 
                         if (button["image"]=="pyimage5" and previous_sq2.count("8")==1) or (button["image"]=="pyimage12" and previous_sq2.count("1")==1):
                             self.promotion_menu(self.piece_color)
+                            
         else:
             return
 
@@ -587,7 +581,6 @@ class App(tk.Frame):
                     if self.allowed_piece_move():
                         self.show_message()
                         return True
-
         return_previous_values()
         return False
 
@@ -596,7 +589,6 @@ class App(tk.Frame):
         for square in self.squares:
             button=self.squares[square]
             if button["image"]==king:
-                move_sound()
                 return square
 
     # fills frame with buttons representing squares.
@@ -635,14 +627,7 @@ class App(tk.Frame):
     def set_alpha_colors(self):
         font_size=7
         letters=[
-                    [' h ',' g ',' f ',' e ',' d ',' c ',' b ',' a '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    ['   ','   ','   ','   ','   ','   ','   ','   '],
-                    [' a ',' b ',' c ',' d ',' e ',' f ',' g ',' h '],
+                    [' a ',' b ',' c ',' d ',' e ',' f ',' g ',' h ']
                 ]
         for x, rows in enumerate(letters):
             for y, letters in enumerate(rows):
@@ -653,24 +638,24 @@ class App(tk.Frame):
                                     )
                 # alternates between dark/light tiles.
                 if x%2==0 and y%2==0: 
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+1, column=y, sticky='ws')
-                elif x%2==1 and y%2==1:
-                    self.label.config(foreground=DARK, background=LIGHT)
-                    self.label.grid(row=x+1, column=y, sticky='ws')
-                else:
                     self.label.config(foreground=LIGHT, background=DARK)
-                    self.label.grid(row=x+1, column=y, sticky='ws')
+                    self.label.grid(row=x+8, column=y, sticky='ws')
+                elif x%2==1 and y%2==1:
+                    self.label.config(foreground=LIGHT, background=DARK)
+                    self.label.grid(row=x+8, column=y, sticky='ws')
+                else:
+                    self.label.config(foreground=DARK, background=LIGHT)
+                    self.label.grid(row=x+8, column=y, sticky='ws')
 
         numbers={
-                    '1      8':0, 
-                    '2      7':1, 
-                    '3      6':2, 
-                    '4      5':3, 
-                    '5      4':4, 
-                    '6      3':5, 
-                    '7      2':6, 
-                    '8      1':7,
+                    '1':'0', 
+                    '2':'1', 
+                    '3':'2', 
+                    '4':'3', 
+                    '5':'4', 
+                    '6':'5', 
+                    '7':'6', 
+                    '8':'7',
                 }
         for x, cols in enumerate(numbers):
             for y, numbers in enumerate(cols):
