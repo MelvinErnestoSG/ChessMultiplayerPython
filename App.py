@@ -20,7 +20,26 @@ from threading import Thread
 from tkinter import messagebox
 
 # importing some constants.
-from Const import DIMENSION,SIZE,CASTLED_WHITE,CASTLED_BLACK,LEFT,UP,LIGHT,DARK,WHITE
+# Board dimensions
+DIMENSION=8
+
+# Size screen
+SIZE=100
+
+# Castled white and back
+CASTLED_WHITE=1
+CASTLED_BLACK=8
+
+# Center screen
+LEFT=400
+UP=5
+
+# Colors square
+LIGHT="burlywood1"
+DARK="tan4"
+
+# Color highlight background
+WHITE='#fff'
 
 # help with importing playsound.
 # pip install playsound 
@@ -40,7 +59,7 @@ def capture_sound():
     playsound('capture.wav')
 
 class App(tk.Frame):
-    def __init__(self, parent, height, width): 
+    def __init__(self, parent, height, width):
         parent.iconbitmap(os.path.join('./icon/ChessPieces.ico'))
         parent.title('Play Chess')
         parent.geometry(f'{str(SIZE*DIMENSION)}x{str(SIZE*DIMENSION)}+{LEFT}+{UP}')
@@ -48,7 +67,7 @@ class App(tk.Frame):
         parent.maxsize(height=780,width=780)
         parent.minsize(height=780,width=780)
 
-        tk.Frame.__init__(self, parent) 
+        tk.Frame.__init__(self, parent)
         self.height=height
         self.width=width
         self.config(height=100*self.height)
@@ -97,35 +116,27 @@ class App(tk.Frame):
         self.set_pieces()
         self.mainloop()
 
-    # called when a square button is pressed, consists of majority of the movement code.
-    def select_piece(self,button): 
-        # checks color of first piece
-        if button["image"] in self.white_pieces and self.buttons_pressed==False: 
-            self.piece_color="white"
-        if button["image"] in self.black_pieces and self.buttons_pressed==False:
-            self.piece_color="black" 
-
-        #prevents people from moving their pieces when it's not their turn.
-        if (self.piece_color=="white" and self.turns%2==0) or (self.piece_color=="black" and self.turns%2==1) or self.buttons_pressed==True:
-            # stores square and button of first square selected.
-            if self.buttons_pressed==False: 
-                self.sq1=list(self.squares.keys())[list(self.squares.values()).index(button)] 
-                # retrieves position of piece.
-                self.sq1_button=button
+    def select_piece(self, button): #called when a square button is pressed, consists of majority of the movement code
+        if button["image"] in self.white_pieces and self.buttons_pressed == 0: #checks color of first piece
+            self.piece_color = "white"
+        elif button["image"] in self.black_pieces and self.buttons_pressed == 0:
+            self.piece_color = "black"      
+        
+        if (self.piece_color == "white" and self.turns % 2 == 0) or (self.piece_color == "black" and self.turns % 2 == 1) or self.buttons_pressed == 1: #prevents people from moving their pieces when it's not their turn
+            if self.buttons_pressed==0: #stores square and button of first square selected
+                self.sq1=list(self.squares.keys())[list(self.squares.values()).index(button)] #retrieves pos of piece
+                self.sq1_button = button
                 self.buttons_pressed+=1
 
-            # stores square and button of second square selected.    
-            if self.buttons_pressed==True: 
+            elif self.buttons_pressed==1: #stores square and button of second square selected
                 self.sq2=list(self.squares.keys())[list(self.squares.values()).index(button)]
-                # retrieves position of piece.
                 self.sq2_button=button
                 self.buttons_pressed-=1
-                
-                # prevents self destruction and allows the user to choose a new piece.
-                if self.sq2==self.sq1:
-                    self.buttons_pressed=False
-                    return
 
+                if self.sq2 == self.sq1: #prevents self-destruction and allows the user to choose a new piece
+                    self.buttons_pressed = 0
+                    return
+                
                 # makes sure the move is legal.
                 if self.allowed_piece_move() and self.friendly_fire()==False:
                     previous_sq1=self.sq1
@@ -284,7 +295,7 @@ class App(tk.Frame):
     # show message box in the screen.
     def show_message(self):
         messagebox.showerror('Error','Something went wrong with your movement!')
-
+            
     # prevents capturing your own pieces.    
     def friendly_fire(self): 
         piece_2_color=self.sq2_button["image"]
@@ -296,68 +307,61 @@ class App(tk.Frame):
             return True
         else:
             return False
-
-    # makes sure that the squares in between sq1 and sq2 are not occupied.
-    def clear_path(self, piece): 
-        if piece=="rook" or piece=="queen": 
-            # for vertical movement  
-            if self.sq1[0]==self.sq2[0]: 
-                position1=min(int(self.sq1[1]),int(self.sq2[1]))
-                position2=max(int(self.sq1[1]),int(self.sq2[1]))
-
-                for i in range(position1+1,position2):
-                    square_on_path=self.squares[self.sq1[0]+str(i)].cget("image")
-                    if square_on_path!="pyimage2":
+        
+    def clear_path(self, piece): #makes sure that the squares in between sq1 and sq2 aren't occupied
+        if piece == "rook" or piece == "queen":   
+            if self.sq1[0] == self.sq2[0]: #for vertical movement
+                pos1 = min(int(self.sq1[1]), int(self.sq2[1]))
+                pos2 = max(int(self.sq1[1]), int(self.sq2[1]))
+                for i in range(pos1+1, pos2):
+                    square_on_path = self.squares[self.sq1[0]+str(i)].cget("image")
+                    if square_on_path != "pyimage2":
                         return False
+                    
+            elif self.sq1[1] == self.sq2[1]: #for horizontal movement
+                pos1 = min(self.ranks.find(self.sq1[0]), self.ranks.find(self.sq2[0]))
+                pos2 = max(self.ranks.find(self.sq1[0]), self.ranks.find(self.sq2[0]))
 
-            # for horizontal movement.      
-            elif self.sq1[1]==self.sq2[1]: 
-                position1=min(self.ranks.find(self.sq1[0]),self.ranks.find(self.sq2[0]))
-                position2=max(self.ranks.find(self.sq1[0]),self.ranks.find(self.sq2[0]))
-
-                for i in range(position1+1,position2):
-                    square_on_path=self.squares[self.ranks[i]+self.sq1[1]].cget("image")
-                    if square_on_path!="pyimage2":
+                for i in range(pos1+1, pos2):
+                    square_on_path = self.squares[self.ranks[i]+self.sq1[1]].cget("image")
+                    if square_on_path != "pyimage2":
                         return False
-
-        # for diagonal movement.    
-        if piece=="bishop" or piece=="queen":
-            x1=self.ranks.find(self.sq1[0])
-            x2=self.ranks.find(self.sq2[0])
-            y1=int(self.sq1[1])
-            y2=int(self.sq2[1])
+                    
+        if piece == "bishop" or piece == "queen": #for diagonal movement
+            x1 = self.ranks.find(self.sq1[0])
+            x2 = self.ranks.find(self.sq2[0])
+            y1 = int(self.sq1[1])
+            y2 = int(self.sq2[1])
             
-            if y1<y2:
-                if x1<x2:# NE direction.
-                    for x in range(x1+1,x2):
-                        y1+=1
-                        square_on_path=self.squares[self.ranks[x]+str(y1)].cget("image")
-                        if square_on_path!="pyimage2":
+            if  y1<y2:
+                if x1<x2: #NE direction
+                    for x in range(x1+1, x2):
+                        y1 += 1
+                        square_on_path = self.squares[self.ranks[x]+str(y1)].cget("image")
+                        if square_on_path != "pyimage2":
                             return False
-
-                elif x1>x2:# NW direction.
-                    for x in range(x1-1,x2,-1):
-                        y1+=1
-                        square_on_path=self.squares[self.ranks[x]+str(y1)].cget("image")
-                        if square_on_path!="pyimage2":
+                elif x1>x2: #NW direction
+                    for x in range(x1-1, x2, -1):
+                        y1 += 1
+                        square_on_path = self.squares[self.ranks[x]+str(y1)].cget("image")
+                        if square_on_path != "pyimage2":
                             return False
-
             elif y1>y2:
-                if x1<x2:# SE direction.
-                    for x in range(x1+1,x2):
-                        y1-=1
-                        square_on_path=self.squares[self.ranks[x]+str(y1)].cget("image")
-                        if square_on_path!="pyimage2":
+                if x1<x2: #SE direction
+                    for x in range(x1+1, x2):
+                        y1 -= 1
+                        square_on_path = self.squares[self.ranks[x]+str(y1)].cget("image")
+                        if square_on_path != "pyimage2":
                             return False
-
-                if x1>x2:# SW direction
-                    for x in range(x1-1,x2,-1):
-                        y1-=1
-                        square_on_path=self.squares[self.ranks[x]+str(y1)].cget("image")
-                        if square_on_path!="pyimage2":
-                            return False   
+                if x1>x2: #SW direction
+                    for x in range(x1-1, x2, -1):
+                        y1 -= 1
+                        square_on_path = self.squares[self.ranks[x]+str(y1)].cget("image")
+                        if square_on_path != "pyimage2":
+                            return False
         return True
-
+                
+        
     # checks whether the piece can move to square 2 with respect to their movement capabilities.
     def allowed_piece_move(self): 
         # redefining pyimage for readability
@@ -543,47 +547,41 @@ class App(tk.Frame):
     # prevents a move if king is under attack.
     def in_check(self): 
         # stores current values assigned to values.
-        previous_sq1=self.sq1 
-        previous_sq1_button=self.sq1_button
-
-        previous_sq2=self.sq2
-        previous_sq2_button=self.sq2_button
+        previous_sq1 = self.sq1 
+        previous_sq1_button = self.sq1_button
+        previous_sq2 = self.sq2
+        previous_sq2_button = self.sq2_button
         
         def return_previous_values():
-            self.sq1=previous_sq1
-            self.sq1_button=previous_sq1_button
-
-            self.sq2=previous_sq2
-            self.sq2_button=previous_sq2_button
+            self.sq1 = previous_sq1
+            self.sq1_button = previous_sq1_button
+            self.sq2 = previous_sq2
+            self.sq2_button = previous_sq2_button
             
-        if self.piece_color=="white":
+        if self.piece_color == "white":
             # calls find_king function to find position of king.
-            self.sq2=self.find_king("pyimage3")
+            self.sq2 = self.find_king("pyimage3") 
             # iterates through each square.
             for key in self.squares: 
-                self.sq1=key
-                self.sq1_button=self.squares[self.sq1]
+                self.sq1 = key
+                self.sq1_button = self.squares[self.sq1]
                 if self.sq1_button["image"] in self.black_pieces:
-                    # checks to see if the king's current position is a possible move for the piece.
-                    if self.allowed_piece_move(): 
-                        self.show_message()
+                    # checks to see if the king's current pos is a possible move for the piece.
+                    if self.allowed_piece_move():
                         return True
 
-        if self.piece_color=="black":
-            # calls find_king function to find position of king.
-            self.sq2=self.find_king("pyimage10")
-            # iterates through each square
+        if self.piece_color == "black":
+            self.sq2 = self.find_king("pyimage10")
             for key in self.squares:
-                self.sq1=key
-                self.sq1_button=self.squares[self.sq1] 
+                self.sq1 = key
+                self.sq1_button = self.squares[self.sq1] 
                 if self.sq1_button["image"] in self.white_pieces:
-                    # checks to see if the king's current position is a possible move for the piece.
                     if self.allowed_piece_move():
-                        self.show_message()
                         return True
+
         return_previous_values()
         return False
-
+    
     # finds the square where the king is currently on.
     def find_king(self,king):
         for square in self.squares:
@@ -675,8 +673,8 @@ class App(tk.Frame):
                     self.numbers_col.grid(row=x+1,column=y,sticky='ne')
                 else:
                     self.numbers_col.config(foreground=LIGHT,background=DARK)
-                    self.numbers_col.grid(row=x+1,column=y,sticky='ne')
-
+                    self.numbers_col.grid(row=x+1,column=y,sticky='ne')               
+        
     # opens and stores images of pieces and prepares
     # the pieces for the game for both sides.
     def import_pieces(self):
@@ -773,7 +771,8 @@ class App(tk.Frame):
                 position=self.ranks[file]+str(rank)
                 self.squares[position].config(image=self.white_images[starting_piece])
                 self.squares[position].image=self.white_images[starting_piece]
-                
+
+# creates main window with the board and creates board object
 # creates main window with the board and creates board object.
 root=tk.Tk()
 root=App(root,DIMENSION,DIMENSION)
