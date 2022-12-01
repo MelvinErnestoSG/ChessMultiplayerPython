@@ -25,17 +25,16 @@ from Const import DIMENSION,SIZE,CASTLED_WHITE,CASTLED_BLACK,LEFT,UP,LIGHT,DARK,
 # help with importing playsound.
 # pip install playsound 
 from playsound import playsound 
-#--------------------------------------#
-# speak function.
+
+# speak function when the game starts.
 engine=pyttsx3.init('sapi5')
 voices=engine.getProperty('voices')
 engine.setProperty('voice', voices[0].id)
-# speak when the game starts.
 def speak(audio):
     engine.say(audio)
     engine.runAndWait()
 Thread(target=speak("welcome!")).start()
-#--------------------------------------#
+
 # sound when are captured pieces.
 def capture_sound(): 
     playsound('capture.wav')
@@ -100,9 +99,10 @@ class App(tk.Frame):
 
     # called when a square button is pressed, consists of majority of the movement code.
     def select_piece(self,button): 
-        if button["image"] in self.white_pieces and self.buttons_pressed==False: #checks color of first piece
+        # checks color of first piece
+        if button["image"] in self.white_pieces and self.buttons_pressed==False: 
             self.piece_color="white"
-        elif button["image"] in self.black_pieces and self.buttons_pressed==False:
+        if button["image"] in self.black_pieces and self.buttons_pressed==False:
             self.piece_color="black" 
 
         #prevents people from moving their pieces when it's not their turn.
@@ -115,7 +115,7 @@ class App(tk.Frame):
                 self.buttons_pressed+=1
 
             # stores square and button of second square selected.    
-            elif self.buttons_pressed==True: 
+            if self.buttons_pressed==True: 
                 self.sq2=list(self.squares.keys())[list(self.squares.values()).index(button)]
                 # retrieves position of piece.
                 self.sq2_button=button
@@ -603,15 +603,15 @@ class App(tk.Frame):
                 else:
                     self.square_color=LIGHT
 
-                buttons = tk.Button(
-                                        self,  
-                                        bg=self.square_color, 
-                                        bd=False, 
-                                        width=94,
-                                        height=94,
-                                        activebackground='lawn green',
-                                    )
-                buttons.grid(row=8-x, column=y)
+                buttons=tk.Button(
+                                    self, 
+                                    bg=self.square_color,
+                                    bd=False, 
+                                    width=94,
+                                    height=94,
+                                    activebackground=self.square_color,
+                                )
+                buttons.grid(row=8-x,column=y)
                 position=self.ranks[y]+str(x+1)
                 self.squares.setdefault(position,buttons) 
 
@@ -623,12 +623,12 @@ class App(tk.Frame):
                                         )
         self.set_alpha_colors()
 
-    # letters and numbers above the buttons.
+    # letters and numbers above of the buttons.
     def set_alpha_colors(self):
         font_size=7
-        # letters above the buttons.
+        # letters above of the buttons.
         letters=[
-                    [' a ',' b ',' c ',' d ',' e ',' f ',' g ',' h ']
+                    ['a','b','c','d','e','f','g','h']
                 ]
         for x, rows in enumerate(letters):
             for y, letters in enumerate(rows):
@@ -637,18 +637,18 @@ class App(tk.Frame):
                                         text=letters, 
                                         font=('monospace',font_size,'bold')
                                     )
-                # alternates between dark/light tiles.
+                # alternates between dark/light tiles
                 if x%2==0 and y%2==0: 
-                    self.label.config(foreground=LIGHT,background=DARK)
-                    self.label.grid(row=x+8,column=y,sticky='ws')
+                    self.label.config(foreground=LIGHT, background=DARK)
+                    self.label.grid(row=x+8, column=y, sticky='ws')
                 elif x%2==1 and y%2==1:
-                    self.label.config(foreground=LIGHT,background=DARK)
-                    self.label.grid(row=x+8,column=y,sticky='ws')
+                    self.label.config(foreground=LIGHT, background=DARK)
+                    self.label.grid(row=x+8, column=y, sticky='ws')
                 else:
-                    self.label.config(foreground=DARK,background=LIGHT)
-                    self.label.grid(row=x+8,column=y,sticky='ws')
+                    self.label.config(foreground=DARK, background=LIGHT)
+                    self.label.grid(row=x+8, column=y, sticky='ws')
 
-        # numbers above the buttons.
+        # numbers above of the buttons.
         numbers={
                     '1':'0', 
                     '2':'1', 
@@ -659,23 +659,23 @@ class App(tk.Frame):
                     '7':'6', 
                     '8':'7',
                 }
-        for x, cols in enumerate(numbers):
-            for y, numbers in enumerate(cols):
-                self.label= tk.Label(
-                                        self, 
-                                        text=numbers, 
-                                        font=('monospace',font_size,'bold')
-                                    )
+        for x, col in enumerate(numbers):
+            for y, numbers in enumerate(col):
+                self.numbers_col=tk.Label(
+                                            self, 
+                                            text=numbers, 
+                                            font=('monospace',font_size,'bold')
+                                        )
                 # alternates between dark/light tiles.
                 if x%2==0 and y%2==0: 
-                    self.label.config(foreground=DARK,background=LIGHT)
-                    self.label.grid(row=x+1,column=y,sticky='ne')
+                    self.numbers_col.config(foreground=DARK,background=LIGHT)
+                    self.numbers_col.grid(row=x+1,column=y,sticky='ne')
                 elif x%2==1 and y%2==1:
-                    self.label.config(foreground=DARK,background=LIGHT)
-                    self.label.grid(row=x+1,column=y,sticky='ne')
+                    self.numbers_col.config(foreground=DARK,background=LIGHT)
+                    self.numbers_col.grid(row=x+1,column=y,sticky='ne')
                 else:
-                    self.label.config(foreground=LIGHT,background=DARK)
-                    self.label.grid(row=x+1,column=y,sticky='ne')
+                    self.numbers_col.config(foreground=LIGHT,background=DARK)
+                    self.numbers_col.grid(row=x+1,column=y,sticky='ne')
 
     # opens and stores images of pieces and prepares
     # the pieces for the game for both sides.
