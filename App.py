@@ -7,8 +7,7 @@ import string
 import os
 
 # help with importing speak audio.
-# pip install pyttsx3.
-import pyttsx3
+import pyttsx3 # pip install pyttsx3
 
 # help with implementing of PIL and images into GUI.
 from PIL import Image, ImageTk 
@@ -16,34 +15,28 @@ from PIL import Image, ImageTk
 # help with importing thread.
 from threading import Thread
 
-# help with importing messagebox.
+# help with importing message box.
 from tkinter import messagebox
 
-# importing some constants.
-# Board dimensions
+# Board dimensions.
 DIMENSION=8
 
-# Size screen
+# Size screen.
 SIZE=100
 
-# Castled white and back
-CASTLED_WHITE=1
-CASTLED_BLACK=8
-
-# Center screen
+# Center screen.
 LEFT=400
 UP=5
 
-# Colors square
+# Colors squares.
 LIGHT="burlywood1"
 DARK="tan4"
 
-# Color highlight background
+# Color highlight background.
 WHITE='#fff'
 
 # help with importing playsound.
-# pip install playsound 
-from playsound import playsound 
+from playsound import playsound # pip install playsound 
 
 # speak function when the game starts.
 engine=pyttsx3.init('sapi5')
@@ -103,10 +96,10 @@ class App(tk.Frame):
         self.sq1_button=None 
         self.sq2_button=None
 
-        # button associated with the square light and dark
+        # button associated with the square light and dark.
         self.piece_color=None
 
-        # for castling
+        # for castling.
         self.castled=False
 
     # for call some functions.
@@ -126,21 +119,25 @@ class App(tk.Frame):
 
         # prevents people from moving their pieces when it's not their turn.
         if (self.piece_color=="white" and self.turns%2==0) or (self.piece_color=="black" and self.turns%2==1) or self.buttons_pressed==True:
-            #stores square and button of first square selected.
+            # stores square and button of first square selected.
             if self.buttons_pressed==False: 
                 # retrieves position of piece.
                 self.sq1=list(self.squares.keys())[list(self.squares.values()).index(button)] 
-                self.sq1_button = button
+                self.sq1_button=button
                 self.buttons_pressed+=1
+
             # stores square and button of second square selected.
             elif self.buttons_pressed==True: 
+                # retrieves position of piece.
                 self.sq2=list(self.squares.keys())[list(self.squares.values()).index(button)]
                 self.sq2_button=button
                 self.buttons_pressed-=1
+
                 # prevents self destruction and allows the user to choose a new piece.
                 if self.sq2==self.sq1:
                     self.buttons_pressed=False
                     return
+
                 # makes sure the move is legal.
                 if self.allowed_piece_move() and self.friendly_fire()==False:
                     previous_sq1=self.sq1
@@ -341,10 +338,10 @@ class App(tk.Frame):
             y1=int(self.sq1[1])
             y2=int(self.sq2[1])
             
-            if  y1<y2:
+            if y1<y2:
                 if x1<x2: #NE direction.
                     for x in range(x1+1,x2):
-                        y1 += 1
+                        y1+=1
                         square_on_path=self.squares[self.ranks[x]+str(y1)].cget("image")
                         if square_on_path!="pyimage2":
                             return False
@@ -395,7 +392,7 @@ class App(tk.Frame):
                 # checks to see if squares in between rook and king 
                 # are empty and are not a possible move for opponent.
                 for x in range(1,4): 
-                    square_button=self.squares[self.ranks[x]+str(CASTLED_WHITE)]
+                    square_button=self.squares[self.ranks[x]+str(1)]
                     if square_button["image"]!="pyimage2":
                         return False
                     self.squares["a1"].config(image="pyimage2")
@@ -410,7 +407,7 @@ class App(tk.Frame):
                 # checks to see if squares in between rook and king 
                 # are empty and are not a possible move for opponent.
                 for x in range(5,7):
-                    square_button=self.squares[self.ranks[x]+str(CASTLED_WHITE)]
+                    square_button=self.squares[self.ranks[x]+str(1)]
                     if square_button["image"]!="pyimage2":
                         return False
                     self.squares["h1"].config(image="pyimage2")
@@ -425,7 +422,7 @@ class App(tk.Frame):
                 # checks to see if squares in between rook and king 
                 # are empty and are not a possible move for opponent.
                 for x in range(1,3):
-                    square_button=self.squares[self.ranks[x]+str(CASTLED_BLACK)]
+                    square_button=self.squares[self.ranks[x]+str(8)]
                     if square_button["image"]!="pyimage2":
                         return False
                     self.squares["a8"].config(image="pyimage2")
@@ -440,7 +437,7 @@ class App(tk.Frame):
                 # checks to see if squares in between rook and king 
                 # are empty and are not a possible move for opponent.
                 for x in range(5,7): 
-                    square_button=self.squares[self.ranks[x]+str(CASTLED_BLACK)]
+                    square_button=self.squares[self.ranks[x]+str(8)]
                     if square_button["image"]!="pyimage2":
                         return False
                     self.squares["h8"].config(image="pyimage2")
@@ -534,6 +531,116 @@ class App(tk.Frame):
             if int(self.sq1[1])+1==int(self.sq2[1]) and abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1 and self.sq2_button["image"]!="pyimage2":
                 capture_sound()
                 return True
+    
+            # allows the moving of en passant from a5 to b5.
+            if "a5" in self.sq1=="a5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["b5"].config(image="pyimage2")
+                    self.squares["b5"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from b5 to a5.
+            if "b5" in self.sq1=="b5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["a5"].config(image="pyimage2")
+                    self.squares["a5"].image="pyimage2"
+                    self.squares["c5"].config(image="pyimage2")
+                    self.squares["c5"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from b5 to c5.
+            if "b5" in self.sq1=="b5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["c5"].config(image="pyimage2")
+                    self.squares["c5"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from c5 to b5.
+            if "c5" in self.sq1=="c5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["d5"].config(image="pyimage2")
+                    self.squares["d5"].image="pyimage2"
+                    self.squares["b5"].config(image="pyimage2")
+                    self.squares["b5"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from c5 to d5.
+            if "c5" in self.sq1=="c5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["b5"].config(image="pyimage2")
+                    self.squares["b5"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from d5 to c5.
+            if "d5" in self.sq1=="d5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["c5"].config(image="pyimage2")
+                    self.squares["c5"].image="pyimage2"
+                    self.squares["e5"].config(image="pyimage2")
+                    self.squares["e5"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from d5 to c5.
+            if "d5" in self.sq1=="d5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["e5"].config(image="pyimage2")
+                    self.squares["e5"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from e5 to f5.
+            if "e5" in self.sq1=="e5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["d5"].config(image="pyimage2")
+                    self.squares["d5"].image="pyimage2"
+                    self.squares["f5"].config(image="pyimage2")
+                    self.squares["f5"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from e5 to f5.
+            if "e5" in self.sq1=="e5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["f5"].config(image="pyimage2")
+                    self.squares["f5"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from f5 to e5.
+            if "f5" in self.sq1=="f5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["e5"].config(image="pyimage2")
+                    self.squares["e5"].image="pyimage2"
+                    self.squares["g5"].config(image="pyimage2")
+                    self.squares["g5"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from f5 to g5.
+            if "f5" in self.sq1=="f5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["g5"].config(image="pyimage2")
+                    self.squares["g5"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from g5 to f5.
+            if "g5" in self.sq1=="g5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["f5"].config(image="pyimage2")
+                    self.squares["f5"].image="pyimage2"
+                    self.squares["h5"].config(image="pyimage2")
+                    self.squares["h5"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from f5 to g5.
+            if "g5" in self.sq1=="g5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["h5"].config(image="pyimage2")
+                    self.squares["h5"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from h5 to g5.
+            if "h5" in self.sq1=="h5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["g5"].config(image="pyimage2")
+                    self.squares["g5"].image="pyimage2"
+                    return True
 
         # black pawn movement.
         if self.sq1_button["image"]==bp: 
@@ -541,7 +648,10 @@ class App(tk.Frame):
             if "7" in self.sq1: 
                 # only allows it to move straight 1 or 2 sql.
                 if int(self.sq1[1])==int(self.sq2[1])+1 or int(self.sq1[1])==int(self.sq2[1])+2 and self.sq1[0]==self.sq2[0] and self.sq2_button["image"]=="pyimage2":
-                    return True
+                    # makes sure that there is no piece blocking path.
+                    in_front=self.squares[self.sq1[0]+str(int(self.sq1[1])+1)]
+                    if in_front["image"]!="pyimage2": 
+                        return True
             
             # allows 1 sq movement.
             if int(self.sq1[1])==int(self.sq2[1])+1 and self.sq1[0]==self.sq2[0] and self.sq2_button["image"]=="pyimage2":
@@ -551,6 +661,116 @@ class App(tk.Frame):
             if int(self.sq1[1])==int(self.sq2[1])+1 and abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1 and self.sq2_button["image"]!="pyimage2":
                 capture_sound()
                 return True
+
+            # allows the moving of en passant from a5 to b5.
+            if "a4" in self.sq1!="a5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["b4"].config(image="pyimage2")
+                    self.squares["b4"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from b5 to a5.
+            if "b4" in self.sq1!="b5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["a4"].config(image="pyimage2")
+                    self.squares["a4"].image="pyimage2"
+                    self.squares["c4"].config(image="pyimage2")
+                    self.squares["c4"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from b5 to c5.
+            if "b4" in self.sq1!="b5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["c4"].config(image="pyimage2")
+                    self.squares["c4"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from c5 to b5.
+            if "c4" in self.sq1!="c5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["d4"].config(image="pyimage2")
+                    self.squares["d4"].image="pyimage2"
+                    self.squares["b4"].config(image="pyimage2")
+                    self.squares["b4"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from c5 to d5.
+            if "c4" in self.sq1!="c5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["b4"].config(image="pyimage2")
+                    self.squares["b4"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from d5 to c5.
+            if "d4" in self.sq1!="d5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["c4"].config(image="pyimage2")
+                    self.squares["c4"].image="pyimage2"
+                    self.squares["e4"].config(image="pyimage2")
+                    self.squares["e4"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from d5 to c5.
+            if "d4" in self.sq1!="d5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["e4"].config(image="pyimage2")
+                    self.squares["e4"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from e5 to f5.
+            if "e4" in self.sq1!="e5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["d4"].config(image="pyimage2")
+                    self.squares["d4"].image="pyimage2"
+                    self.squares["f4"].config(image="pyimage2")
+                    self.squares["f4"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from e5 to f5.
+            if "e4" in self.sq1!="e5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["f4"].config(image="pyimage2")
+                    self.squares["f4"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from f5 to e5.
+            if "f4" in self.sq1!="f5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["e4"].config(image="pyimage2")
+                    self.squares["e4"].image="pyimage2"
+                    self.squares["g4"].config(image="pyimage2")
+                    self.squares["g4"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from f5 to g5.
+            if "f4" in self.sq1!="f5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["g4"].config(image="pyimage2")
+                    self.squares["g4"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from g5 to f5.
+            if "g4" in self.sq1!="g5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["f4"].config(image="pyimage2")
+                    self.squares["f4"].image="pyimage2"
+                    self.squares["h4"].config(image="pyimage2")
+                    self.squares["h4"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from f5 to g5.
+            if "g4" in self.sq1!="g5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["h4"].config(image="pyimage2")
+                    self.squares["h4"].image="pyimage2"
+                    return True
+
+            # allows the moving of en passant from h5 to g5.
+            if "h4" in self.sq1!="h5":
+                if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
+                    self.squares["g4"].config(image="pyimage2")
+                    self.squares["g4"].image="pyimage2"
+                    return True
 
     # prevents a move if king is under attack.
     def in_check(self): 
@@ -619,7 +839,7 @@ class App(tk.Frame):
                                     height=94,
                                     activebackground=self.square_color,
                                 )
-                buttons.grid(row=8-x,column=y)
+                buttons.grid(row=DIMENSION-x,column=y)
                 position=self.ranks[y]+str(x+1)
                 self.squares.setdefault(position,buttons) 
 
