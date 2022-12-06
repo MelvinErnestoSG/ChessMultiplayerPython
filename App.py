@@ -168,7 +168,6 @@ class App(tk.Frame):
                         # checks for possible pawn promotion.                 
                         if (button["image"]=="pyimage5" and previous_sq2.count("8")==1) or (button["image"]=="pyimage12" and previous_sq2.count("1")==1):
                             self.promotion_menu(self.piece_color)
-                            
         else:
             return
 
@@ -292,25 +291,19 @@ class App(tk.Frame):
                                         )
             promotion_knight.grid(row=0,column=3,padx=1,pady=1)
             promotion.mainloop()
-
-    # show message box in the screen.
-    def invalid_move(self):
-        messagebox.showerror('Error','Something went wrong with your movement!')
             
     # prevents capturing your own pieces.    
     def friendly_fire(self): 
         piece_2_color=self.sq2_button["image"]
         if self.piece_color=="white" and piece_2_color in self.white_pieces:
-            self.show_message()
             return True
         if self.piece_color=="black" and piece_2_color in self.black_pieces:
-            self.show_message()
             return True
         else:
             return False
 
     # makes sure that the squares in between sq1 and sq2 aren't occupied.
-    def clear_path(self, piece): 
+    def clear_path(self,piece): 
         if piece=="rook" or piece=="queen":  
             # for vertical movement. 
             if self.sq1[0]==self.sq2[0]: 
@@ -366,7 +359,6 @@ class App(tk.Frame):
                             return False
         return True
                 
-        
     # checks whether the piece can move to square 2 with respect to their movement capabilities.
     def allowed_piece_move(self): 
         # redefining pyimage for readability.
@@ -375,7 +367,7 @@ class App(tk.Frame):
 
         # for when this function is called for check.
         if self.sq1_button["image"]=="pyimage2" or self.sq1_button["image"]=="pyimage9":
-            return False
+            return True
 
         # king movement.
         if self.sq1_button["image"]==wk or self.sq1_button["image"]==bk:
@@ -385,6 +377,7 @@ class App(tk.Frame):
 
             # allows 1 square when capture.
             if (abs(int(self.sq1[1])-int(self.sq2[1]))<2) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])))<2 and self.sq2_button["image"]!="pyimage2":
+                capture_sound()
                 return True
 
         # castle movement to white in long form.
@@ -662,14 +655,14 @@ class App(tk.Frame):
                 capture_sound()
                 return True
 
-            # allows the moving of en passant from a5 to b5.
+            # allows the moving of en passant from a4 to b4.
             if "a4" in self.sq1!="a5":
                 if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
                     self.squares["b4"].config(image="pyimage2")
                     self.squares["b4"].image="pyimage2"
                     return True
 
-            # allows the moving of en passant from b5 to a5.
+            # allows the moving of en passant from b4 to a4.
             if "b4" in self.sq1!="b5":
                 if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
                     self.squares["a4"].config(image="pyimage2")
@@ -678,14 +671,14 @@ class App(tk.Frame):
                     self.squares["c4"].image="pyimage2"
                     return True
 
-            # allows the moving of en passant from b5 to c5.
+            # allows the moving of en passant from b4 to c4.
             if "b4" in self.sq1!="b5":
                 if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
                     self.squares["c4"].config(image="pyimage2")
                     self.squares["c4"].image="pyimage2"
                     return True
 
-            # allows the moving of en passant from c5 to b5.
+            # allows the moving of en passant from c4 to d4.
             if "c4" in self.sq1!="c5":
                 if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
                     self.squares["d4"].config(image="pyimage2")
@@ -694,14 +687,14 @@ class App(tk.Frame):
                     self.squares["b4"].image="pyimage2"
                     return True
 
-            # allows the moving of en passant from c5 to d5.
+            # allows the moving of en passant from c4 to b4.
             if "c4" in self.sq1!="c5":
                 if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
                     self.squares["b4"].config(image="pyimage2")
                     self.squares["b4"].image="pyimage2"
                     return True
 
-            # allows the moving of en passant from d5 to c5.
+            # allows the moving of en passant from d4 to c4.
             if "d4" in self.sq1!="d5":
                 if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
                     self.squares["c4"].config(image="pyimage2")
@@ -710,14 +703,14 @@ class App(tk.Frame):
                     self.squares["e4"].image="pyimage2"
                     return True
 
-            # allows the moving of en passant from d5 to c5.
+            # allows the moving of en passant from d4 to e4.
             if "d4" in self.sq1!="d5":
                 if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
                     self.squares["e4"].config(image="pyimage2")
                     self.squares["e4"].image="pyimage2"
                     return True
 
-            # allows the moving of en passant from e5 to f5.
+            # allows the moving of en passant from e4 to f4.
             if "e4" in self.sq1!="e5":
                 if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
                     self.squares["d4"].config(image="pyimage2")
@@ -726,14 +719,14 @@ class App(tk.Frame):
                     self.squares["f4"].image="pyimage2"
                     return True
 
-            # allows the moving of en passant from e5 to f5.
+            # allows the moving of en passant from e4 to f4.
             if "e4" in self.sq1!="e5":
                 if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
                     self.squares["f4"].config(image="pyimage2")
                     self.squares["f4"].image="pyimage2"
                     return True
 
-            # allows the moving of en passant from f5 to e5.
+            # allows the moving of en passant from f4 to e4.
             if "f4" in self.sq1!="f5":
                 if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
                     self.squares["e4"].config(image="pyimage2")
@@ -742,14 +735,14 @@ class App(tk.Frame):
                     self.squares["g4"].image="pyimage2"
                     return True
 
-            # allows the moving of en passant from f5 to g5.
+            # allows the moving of en passant from f4 to g4.
             if "f4" in self.sq1!="f5":
                 if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
                     self.squares["g4"].config(image="pyimage2")
                     self.squares["g4"].image="pyimage2"
                     return True
 
-            # allows the moving of en passant from g5 to f5.
+            # allows the moving of en passant from g4 to f4.
             if "g4" in self.sq1!="g5":
                 if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
                     self.squares["f4"].config(image="pyimage2")
@@ -758,19 +751,23 @@ class App(tk.Frame):
                     self.squares["h4"].image="pyimage2"
                     return True
 
-            # allows the moving of en passant from f5 to g5.
+            # allows the moving of en passant from g4 to h4.
             if "g4" in self.sq1!="g5":
                 if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
                     self.squares["h4"].config(image="pyimage2")
                     self.squares["h4"].image="pyimage2"
                     return True
 
-            # allows the moving of en passant from h5 to g5.
+            # allows the moving of en passant from h4 to g4.
             if "h4" in self.sq1!="h5":
                 if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])) and self.sq2_button["image"]=="pyimage2":
                     self.squares["g4"].config(image="pyimage2")
                     self.squares["g4"].image="pyimage2"
                     return True
+
+    # show message box in the screen.
+    def invalid_move(self):
+        messagebox.showerror('Error','Something went wrong with your movement!')
 
     # prevents a move if king is under attack.
     def in_check(self): 
@@ -787,24 +784,27 @@ class App(tk.Frame):
             self.sq2_button=previous_sq2_button
             
         if self.piece_color=="white":
-            # calls find_king function to find position of king.
+            # calls find king function to find position of king.
             self.sq2=self.find_king("pyimage3") 
             # iterates through each square.
             for key in self.squares: 
                 self.sq1=key
                 self.sq1_button=self.squares[self.sq1]
                 if self.sq1_button["image"] in self.black_pieces:
-                    # checks to see if the king's current pos is a possible move for the piece.
+                    # checks to see if the king's current position is a possible move for the piece.
                     if self.allowed_piece_move():
                         self.invalid_move()
                         return True
 
         if self.piece_color=="black":
+            # calls find king function to find position of king.
             self.sq2=self.find_king("pyimage10")
+            # iterates through each square.
             for key in self.squares:
                 self.sq1=key
                 self.sq1_button=self.squares[self.sq1] 
                 if self.sq1_button["image"] in self.white_pieces:
+                    # checks to see if the king's current position is a possible move for the piece.
                     if self.allowed_piece_move():
                         self.invalid_move()
                         return True
