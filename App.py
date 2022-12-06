@@ -1,44 +1,44 @@
 import tkinter as tk
 
-# for a string to store alphabet.
+# For a string to store alphabet.
 import string
 
-# help with importing images.
+# Help with importing images.
 import os
 
-# help with importing speak audio.
+# Help with importing speak audio.
 import pyttsx3 # pip install pyttsx3
 
-# help with implementing of PIL and images into GUI.
+# Help with implementing of PIL and images into GUI.
 from PIL import Image, ImageTk 
 
-# help with importing thread.
+# Help with importing thread.
 from threading import Thread
 
-# help with importing message box.
+# Help with importing message box.
 from tkinter import messagebox
 
-# Board dimensions.
+# For board dimensions.
 DIMENSION=8
 
-# Size screen.
+# For size screen.
 SIZE=100
 
-# Center screen.
+# For center screen.
 LEFT=400
 UP=5
 
-# Colors squares.
+# For colors squares.
 LIGHT="burlywood1"
 DARK="tan4"
 
-# Color highlight background.
+# For color highlight background.
 WHITE='#fff'
 
-# help with importing playsound.
+# Help with importing playsound.
 from playsound import playsound # pip install playsound 
 
-# speak function when the game starts.
+# Speak function when the game starts.
 engine=pyttsx3.init('sapi5')
 voices=engine.getProperty('voices')
 engine.setProperty('voice', voices[0].id)
@@ -47,7 +47,7 @@ def speak(audio):
     engine.runAndWait()
 Thread(target=speak("welcome!")).start()
 
-# sound when are captured pieces.
+# Sounds when are captured pieces.
 def capture_sound(): 
     playsound('capture.wav')
 

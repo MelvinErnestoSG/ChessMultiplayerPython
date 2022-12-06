@@ -47,7 +47,7 @@ def speak(audio):
     engine.runAndWait()
 Thread(target=speak("welcome!")).start()
 
-# sound when are captured pieces.
+# sounds when are captured pieces.
 def capture_sound(): 
     playsound('capture.wav')
 
