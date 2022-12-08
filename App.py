@@ -126,6 +126,7 @@ class App(tk.Frame):
                 self.sq1=list(self.squares.keys())[list(self.squares.values()).index(button)] 
                 self.sq1_button=button
                 self.buttons_pressed+=1
+
             # Stores square and button of second square selected.
             elif self.buttons_pressed==True: 
                 # Retrieves position of piece.
@@ -191,7 +192,7 @@ class App(tk.Frame):
         #black_figures={'king':'♚','queen':'♛','rook':'♜','bishop':'♝','knight':'♞','pawn':'♟'}
         if color=="white":
             # Triggers return piece function when selected.
-            promotion_queen=tk.Button    (
+            promotion_queen=tk.Button   (
                                             promotion, 
                                             text="♕",
                                             font=("monospace",45,"bold"),
@@ -215,7 +216,7 @@ class App(tk.Frame):
                                     )
             promotion_rook.grid(row=0,column=1,padx=1,pady=1)
 
-            promotion_bishop=tk.Button   (
+            promotion_bishop=tk.Button  (
                                             promotion, 
                                             text="♗", 
                                             font=("monospace",45,"bold"),
@@ -227,7 +228,7 @@ class App(tk.Frame):
                                         )
             promotion_bishop.grid(row=0,column=2,padx=1,pady=1)
 
-            promotion_knight=tk.Button   (
+            promotion_knight=tk.Button  (
                                             promotion, 
                                             text="♘", 
                                             font=("monospace",45,"bold"),
@@ -241,7 +242,7 @@ class App(tk.Frame):
 
         elif color=="black":
             # Triggers return piece function when selected.
-            promotion_queen=tk.Button    (
+            promotion_queen=tk.Button   (
                                             promotion, 
                                             text="♛", 
                                             font=("monospace",45,"bold"),
@@ -253,7 +254,7 @@ class App(tk.Frame):
                                         )
             promotion_queen.grid(row=0,column=0,padx=1,pady=1)
 
-            promotion_rook=tk.Button     (
+            promotion_rook=tk.Button    (
                                             promotion, 
                                             text="♜", 
                                             font=("monospace",45,"bold"),
@@ -265,7 +266,7 @@ class App(tk.Frame):
                                         )
             promotion_rook.grid(row=0,column=1,padx=1,pady=1)
 
-            promotion_bishop=tk.Button   (
+            promotion_bishop=tk.Button  (
                                             promotion, 
                                             text="♝", 
                                             font=("monospace",45,"bold"),
@@ -277,7 +278,7 @@ class App(tk.Frame):
                                         )
             promotion_bishop.grid(row=0,column=2,padx=1,pady=1)
 
-            promotion_knight=tk.Button   (
+            promotion_knight=tk.Button  (
                                             promotion, 
                                             text="♞", 
                                             font=("monospace",45,"bold"),
@@ -846,14 +847,14 @@ class App(tk.Frame):
 
         # Numbers above of the buttons.
         numbers={
-                    '1':'0', 
-                    '2':'1', 
-                    '3':'2', 
-                    '4':'3', 
-                    '5':'4', 
-                    '6':'5', 
-                    '7':'6', 
-                    '8':'7',
+                    '1':0, 
+                    '2':1, 
+                    '3':2, 
+                    '4':3, 
+                    '5':4, 
+                    '6':5, 
+                    '7':6, 
+                    '8':7,
                 }
         for x, col in enumerate(numbers):
             for y, numbers in enumerate(col):
@@ -973,4 +974,5 @@ class App(tk.Frame):
 # Creates main window with the board objects.
 root=tk.Tk()
 root=App(root,DIMENSION,DIMENSION)
-root()
+if __name__ == "__main__":
+    root()
