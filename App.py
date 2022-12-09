@@ -166,131 +166,20 @@ class App(tk.Frame):
                         self.squares[previous_sq1].image=previous_sq1_button_piece
                     else:
                         self.turns+=1  
-                        # Checks for possible pawn promotion.                 
-                        if (button["image"]=="pyimage5" and previous_sq2.count("8")==1) or (button["image"]=="pyimage12" and previous_sq2.count("1")==1):
-                            self.promotion_menu(self.piece_color)
-            capture_sound()
+                        # For one possible white pawn promotion in Queen.           
+                        if (button["image"]=="pyimage5" and previous_sq2.count("8")==1):
+                            self.squares[self.sq2].config(image="pyimage6")
+                            self.squares[self.sq2].image="pyimage6"
+
+                        # For one possible black pawn promotion in Queen. 
+                        if (button["image"]=="pyimage12" and previous_sq2.count("1")==1):
+                            self.squares[self.sq2].config(image="pyimage13")
+                            self.squares[self.sq2].image="pyimage13"
+                        else:
+                            capture_sound()
         else:
             return True
 
-    # Creates menu to choose what piece to change the pawn to.
-    def promotion_menu(self,color): 
-        # Function called by buttons to make the change and destroy window.
-        def return_piece(piece): 
-            self.squares[self.sq2].config(image=piece)
-            self.squares[self.sq2].image=piece
-            promotion.destroy()
-        # Creates a new menu with buttons depending on pawn color.
-        promotion=tk.Tk() 
-        promotion.title("Play Chess")
-        promotion.iconbitmap("./icon/ChessPieces.ico")
-        promotion.geometry("+600+300")
-        promotion.config(width=500,height=135,background="#000")
-        promotion.resizable(0, 0)
-        #https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
-        #white_figures={'king':'♔','queen':'♕','rook':'♖','bishop':'♗','knight':'♘','pawn':'♙'}
-        #black_figures={'king':'♚','queen':'♛','rook':'♜','bishop':'♝','knight':'♞','pawn':'♟'}
-        if color=="white":
-            # Triggers return piece function when selected.
-            promotion_queen=tk.Button   (
-                                            promotion, 
-                                            text="♕",
-                                            font=("monospace",45,"bold"),
-                                            bg=DARK,
-                                            fg="#fff",
-                                            activebackground="lawn green",
-                                            command=lambda: 
-                                            return_piece("pyimage6")
-                                        )
-            promotion_queen.grid(row=0,column=0,padx=1,pady=1)
-
-            promotion_rook=tk.Button (
-                                        promotion, 
-                                        text="♖", 
-                                        font=("monospace",45,"bold"),
-                                        bg=DARK,
-                                        fg="#fff",
-                                        activebackground="lawn green",
-                                        command=lambda: 
-                                        return_piece("pyimage7")
-                                    )
-            promotion_rook.grid(row=0,column=1,padx=1,pady=1)
-
-            promotion_bishop=tk.Button  (
-                                            promotion, 
-                                            text="♗", 
-                                            font=("monospace",45,"bold"),
-                                            bg=DARK,
-                                            fg="#fff",
-                                            activebackground="lawn green",
-                                            command=lambda: 
-                                            return_piece("pyimage1")
-                                        )
-            promotion_bishop.grid(row=0,column=2,padx=1,pady=1)
-
-            promotion_knight=tk.Button  (
-                                            promotion, 
-                                            text="♘", 
-                                            font=("monospace",45,"bold"),
-                                            bg=DARK,
-                                            fg="#fff",
-                                            activebackground="lawn green",
-                                            command=lambda: 
-                                            return_piece("pyimage4")
-                                        ) 
-            promotion_knight.grid(row=0,column=3,padx=1,pady=1)
-
-        elif color=="black":
-            # Triggers return piece function when selected.
-            promotion_queen=tk.Button   (
-                                            promotion, 
-                                            text="♛", 
-                                            font=("monospace",45,"bold"),
-                                            bg=LIGHT,
-                                            fg="#000",
-                                            activebackground="lawn green",
-                                            command=lambda: 
-                                            return_piece("pyimage13")
-                                        )
-            promotion_queen.grid(row=0,column=0,padx=1,pady=1)
-
-            promotion_rook=tk.Button    (
-                                            promotion, 
-                                            text="♜", 
-                                            font=("monospace",45,"bold"),
-                                            bg=LIGHT,
-                                            fg="#000",
-                                            activebackground="lawn green",
-                                            command=lambda: 
-                                            return_piece("pyimage14")
-                                        )
-            promotion_rook.grid(row=0,column=1,padx=1,pady=1)
-
-            promotion_bishop=tk.Button  (
-                                            promotion, 
-                                            text="♝", 
-                                            font=("monospace",45,"bold"),
-                                            bg=LIGHT,
-                                            fg="#000",
-                                            activebackground="lawn green",
-                                            command=lambda: 
-                                            return_piece("pyimage8")
-                                        )
-            promotion_bishop.grid(row=0,column=2,padx=1,pady=1)
-
-            promotion_knight=tk.Button  (
-                                            promotion, 
-                                            text="♞", 
-                                            font=("monospace",45,"bold"),
-                                            bg=LIGHT,
-                                            fg="#000",
-                                            activebackground="lawn green",
-                                            command=lambda: 
-                                            return_piece("pyimage11")
-                                        )
-            promotion_knight.grid(row=0,column=3,padx=1,pady=1)
-            promotion.mainloop()
-            
     # Prevents capturing your own pieces.    
     def friendly_fire(self): 
         piece_2_color=self.sq2_button["image"]
@@ -369,13 +258,12 @@ class App(tk.Frame):
 
         # For when this function is called for check.
         if self.sq1_button["image"]=="pyimage2" or self.sq1_button["image"]=="pyimage9":
-            return True
+            return False
 
         # King movement.
         if self.sq1_button["image"]==wk or self.sq1_button["image"]==bk:
-
             # Allows 1 square when move.
-            if (abs(int(self.sq1[1])-int(self.sq2[1]))<2) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])))<2 and self.sq2_button["image"]=="pyimage2":
+            if (abs(int(self.sq1[1])-int(self.sq2[1]))<2) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])))<2:
                 return True
 
         # Castle movement to white in long form.
@@ -440,7 +328,6 @@ class App(tk.Frame):
 
         # Queen movement.
         if (self.sq1_button["image"]==wq or self.sq1_button["image"]==bq) and self.clear_path("queen"):
-
             # Allows the moving and the capturing of pieces as rook.
             if int(self.sq1[1])==int(self.sq2[1]) or self.sq1[0]==self.sq2[0]: 
                 return True
@@ -451,14 +338,12 @@ class App(tk.Frame):
 
         # Bishop movement.     
         if (self.sq1_button["image"]==wb or self.sq1_button["image"]==bb) and self.clear_path("bishop"):
-
             # Allows the moving and the capturing of pieces as bishop.
             if abs(int(self.sq1[1])-int(self.sq2[1]))==abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0])): 
                 return True
 
         # Knight movement.
         if self.sq1_button["image"]==wn or self.sq1_button["image"]==bn:
-
             # Allows tall L moves if there is not an opponent piece there.
             if (abs(int(self.sq1[1])-int(self.sq2[1]))==2) and (abs(self.ranks.find(self.sq1[0])-self.ranks.find(self.sq2[0]))==1):
                 return True
@@ -469,7 +354,6 @@ class App(tk.Frame):
 
         # Rook movement.
         if (self.sq1_button["image"]==wr or self.sq1_button["image"]==br) and self.clear_path("rook"): 
-
             # Allows the moving and the capturing of pieces as rook.
             if int(self.sq1[1])==int(self.sq2[1]) or self.sq1[0]==self.sq2[0]:
                 return True
@@ -741,12 +625,14 @@ class App(tk.Frame):
         # Stores current values assigned to values.
         previous_sq1=self.sq1 
         previous_sq1_button=self.sq1_button
+
         previous_sq2=self.sq2
         previous_sq2_button=self.sq2_button
         
         def return_previous_values():
             self.sq1=previous_sq1
             self.sq1_button=previous_sq1_button
+            
             self.sq2=previous_sq2
             self.sq2_button=previous_sq2_button
             
