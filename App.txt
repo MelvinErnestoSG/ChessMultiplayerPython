@@ -715,21 +715,22 @@ class App(tk.Frame):
                 ]
         for x, rows in enumerate(letters):
             for y, letters in enumerate(rows):
-                self.label=tk.Label(
+                self.letters_row=tk.Label(
                                         self, 
                                         text=letters, 
                                         font=('monospace',font_size,'bold')
                                     )
                 # Alternates between dark/light tiles
                 if x%2==0 and y%2==0: 
-                    self.label.config(foreground=LIGHT,background=DARK)
-                    self.label.grid(row=x+8,column=y,sticky='ws')
+                    self.letters_row.config(foreground=LIGHT,background=DARK)
                 elif x%2==1 and y%2==1:
-                    self.label.config(foreground=LIGHT,background=DARK)
-                    self.label.grid(row=x+8,column=y,sticky='ws')
+                    self.letters_row.config(foreground=LIGHT,background=DARK)
                 else:
-                    self.label.config(foreground=DARK,background=LIGHT)
-                    self.label.grid(row=x+8,column=y,sticky='ws')
+                    self.letters_row.config(foreground=DARK,background=LIGHT)
+
+                self.letters_row.grid(row=DIMENSION-x,column=y,sticky='ws')
+                position=self.ranks[y]+str(x+1)
+                self.squares.setdefault(position,letters)
 
         # Numbers above of the buttons.
         numbers={
@@ -752,13 +753,14 @@ class App(tk.Frame):
                 # Alternates between dark/light tiles.
                 if x%2==0 and y%2==0: 
                     self.numbers_col.config(foreground=DARK,background=LIGHT)
-                    self.numbers_col.grid(row=x+1,column=y,sticky='ne')
                 elif x%2==1 and y%2==1:
                     self.numbers_col.config(foreground=DARK,background=LIGHT)
-                    self.numbers_col.grid(row=x+1,column=y,sticky='ne')
                 else:
-                    self.numbers_col.config(foreground=LIGHT,background=DARK)
-                    self.numbers_col.grid(row=x+1,column=y,sticky='ne')               
+                    self.numbers_col.config(foreground=LIGHT,background=DARK)   
+
+                self.numbers_col.grid(row=x+1,column=y,sticky='ne')
+                position=self.ranks[y]+str(x+1)
+                self.squares.setdefault(position,numbers)            
         
     # Opens and stores images of pieces and prepares
     # the pieces for the game for both sides.
