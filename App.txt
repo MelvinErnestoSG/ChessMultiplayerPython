@@ -10,7 +10,7 @@ import os
 import pyttsx3 # pip install pyttsx3
 
 # Help with implementing of PIL and images into GUI.
-from PIL import Image, ImageTk 
+from PIL import Image,ImageTk 
 
 # Help with importing thread.
 from threading import Thread
@@ -41,7 +41,8 @@ from playsound import playsound # pip install playsound
 # Speak function when the game starts.
 engine=pyttsx3.init('sapi5')
 voices=engine.getProperty('voices')
-engine.setProperty('voice', voices[0].id)
+engine.setProperty('voice',voices[0].id)
+
 def speak(audio):
     engine.say(audio)
     engine.runAndWait()
@@ -99,9 +100,6 @@ class App(tk.Frame):
         # Button associated with the squares light and dark.
         self.piece_color=None
 
-        # For castling.
-        self.castled=False
-
     # For call some functions.
     def __call__(self):
         self.set_squares()
@@ -147,7 +145,7 @@ class App(tk.Frame):
                     previous_sq2=self.sq2
                     previous_sq2_button_piece=self.sq2_button["image"]
 
-                    # Moves piece in sq1 to sq2
+                    # Moves piece in sq1 to sq2.
                     self.squares[self.sq2].config(image=self.sq1_button["image"]) 
                     self.squares[self.sq2].image=self.sq1_button["image"]
 
@@ -155,24 +153,22 @@ class App(tk.Frame):
                     self.squares[self.sq1].config(image=self.white_images["blank.png"]) 
                     self.squares[self.sq1].image=self.white_images["blank.png"]
 
-                    # For some reason it says king is in check after a castle - 
-                    # so I set up a variable here that would prevent this code from running.
-                    if self.in_check()==True and self.castled==False:
-                        # Reverts movement since king is or would be put into check because of move.
+                    # Reverts movement since king is or would be put into check because of move.
+                    if self.in_check():
                         self.squares[previous_sq2].config(image=previous_sq2_button_piece) 
                         self.squares[previous_sq2].image=previous_sq2_button_piece
                         
                         self.squares[previous_sq1].config(image=previous_sq1_button_piece)
                         self.squares[previous_sq1].image=previous_sq1_button_piece
                     else:
-                        self.turns+=1  
-                        # For one possible white pawn promotion in Queen.           
-                        if (button["image"]=="pyimage5" and previous_sq2.count("8")==1):
+                        self.turns+=1
+                        # For one possible white pawn to the promotion in Queen.           
+                        if button["image"]=="pyimage5" and previous_sq2.count("8")==True:
                             self.squares[self.sq2].config(image="pyimage6")
                             self.squares[self.sq2].image="pyimage6"
-
-                        # For one possible black pawn promotion in Queen. 
-                        if (button["image"]=="pyimage12" and previous_sq2.count("1")==1):
+                            
+                        # For one possible black pawn to the promotion in Queen.
+                        if button["image"]=="pyimage12" and previous_sq2.count("1")==True:
                             self.squares[self.sq2].config(image="pyimage13")
                             self.squares[self.sq2].image="pyimage13"
                         else:
@@ -190,7 +186,7 @@ class App(tk.Frame):
         else:
             return False
 
-    # Makes sure that the squares in between sq1 and sq2 aren't occupied.
+    # Makes sure that the squares in between sq1 and sq2 are not occupied.
     def clear_path(self,piece): 
         if piece=="rook" or piece=="queen":  
             # For vertical movement. 
@@ -258,7 +254,7 @@ class App(tk.Frame):
 
         # For when this function is called for check.
         if self.sq1_button["image"]=="pyimage2" or self.sq1_button["image"]=="pyimage9":
-            return False
+            return True
 
         # King movement.
         if self.sq1_button["image"]==wk or self.sq1_button["image"]==bk:
@@ -271,14 +267,11 @@ class App(tk.Frame):
             # Checks to see if squares in between rook and king 
             # are empty and are not a possible move for opponent.
             for x in range(1,4): 
-                square_button=self.squares[self.ranks[x]+str(1)]
-                if square_button["image"]!="pyimage2":
-                    return False
-                self.squares["a1"].config(image="pyimage2")
-                self.squares["a1"].image="pyimage2"
-                self.squares["d1"].config(image="pyimage7")
-                self.squares["d1"].image=("pyimage7")
-                self.castled=False
+                if x==1:
+                    self.squares["a1"].config(image="pyimage2")
+                    self.squares["a1"].image="pyimage2"
+                    self.squares["d1"].config(image="pyimage7")
+                    self.squares["d1"].image="pyimage7"  
                 return True
 
         # Castle movement to white in short form.
@@ -286,29 +279,23 @@ class App(tk.Frame):
             # Checks to see if squares in between rook and king 
             # are empty and are not a possible move for opponent.
             for x in range(5,7):
-                square_button=self.squares[self.ranks[x]+str(1)]
-                if square_button["image"]!="pyimage2":
-                    return False
-                self.squares["h1"].config(image="pyimage2")
-                self.squares["h1"].image="pyimage2"
-                self.squares["f1"].config(image="pyimage7")
-                self.squares["f1"].image=("pyimage7")
-                self.castled=False
+                if x==5:
+                    self.squares["h1"].config(image="pyimage2")
+                    self.squares["h1"].image="pyimage2"
+                    self.squares["f1"].config(image="pyimage7")
+                    self.squares["f1"].image="pyimage7"
                 return True
 
         # Castle movement to black in long form.
         if self.sq1_button["image"]==bk and self.sq2=="c8":
             # Checks to see if squares in between rook and king 
             # are empty and are not a possible move for opponent.
-            for x in range(1,3):
-                square_button=self.squares[self.ranks[x]+str(8)]
-                if square_button["image"]!="pyimage2":
-                    return False
-                self.squares["a8"].config(image="pyimage2")
-                self.squares["a8"].image="pyimage2"
-                self.squares["d8"].config(image="pyimage14")
-                self.squares["d8"].image=("pyimage14")
-                self.castled=False
+            for x in range(1,4):
+                if x==1:
+                    self.squares["a8"].config(image="pyimage2")
+                    self.squares["a8"].image="pyimage2"
+                    self.squares["d8"].config(image="pyimage14")
+                    self.squares["d8"].image="pyimage14"
                 return True
 
         # Castle movement to black in short form.
@@ -316,14 +303,11 @@ class App(tk.Frame):
             # Checks to see if squares in between rook and king 
             # are empty and are not a possible move for opponent.
             for x in range(5,7): 
-                square_button=self.squares[self.ranks[x]+str(8)]
-                if square_button["image"]!="pyimage2":
-                    return False
-                self.squares["h8"].config(image="pyimage2")
-                self.squares["h8"].image="pyimage2"
-                self.squares["f8"].config(image="pyimage14")
-                self.squares["f8"].image=("pyimage14")
-                self.castled=False
+                if x==5:
+                    self.squares["h8"].config(image="pyimage2")
+                    self.squares["h8"].image="pyimage2"
+                    self.squares["f8"].config(image="pyimage14")
+                    self.squares["f8"].image="pyimage14"
                 return True
 
         # Queen movement.
@@ -617,9 +601,9 @@ class App(tk.Frame):
                     return True
 
     # Show a message in the screen when is in check.
-    def invalid_move(self):
-        messagebox.showerror('Error','Something went wrong with your movement!')
-
+    def check_message(self):
+        messagebox.showerror('Play Chess','Check!')
+        
     # Prevents a move if king is under attack.
     def in_check(self): 
         # Stores current values assigned to values.
@@ -647,8 +631,8 @@ class App(tk.Frame):
                     # Checks to see if the king's current position 
                     # is a possible move for the piece.
                     if self.allowed_piece_move():
-                        self.invalid_move()
-                        return True
+                        self.check_message()
+                        return True  
 
         if self.piece_color=="black":
             # Calls find king function to find position of king.
@@ -661,9 +645,9 @@ class App(tk.Frame):
                     # Checks to see if the king's current position 
                     # is a possible move for the piece.
                     if self.allowed_piece_move():
-                        self.invalid_move()
+                        self.check_message()
                         return True
-
+                        
         return_previous_values()
         return False
     
@@ -862,5 +846,5 @@ class App(tk.Frame):
 # Creates main window with the board objects.
 root=tk.Tk()
 root=App(root,DIMENSION,DIMENSION)
-if __name__ == "__main__":
+if __name__== "__main__":
     root()
